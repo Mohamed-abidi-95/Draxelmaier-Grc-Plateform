@@ -1,0 +1,608 @@
+> Source document:
+> User_Stories_GRC_Draxlmaier_Simple.pdf
+>
+> Format:
+> Textual representation of the source PDF.
+>
+> Authority:
+> The original validated document remains the authoritative source.
+>
+> Important:
+> This file must not introduce, remove, or modify requirements.
+User Stories — Plateforme GRC DRÄXLMAIER
+Rôles des utilisateurs
+Rôle
+Description
+Compliance Officer
+Administrateur
+Responsable d’une politique
+Responsable (CISO / RSSI)
+Risk Owner
+Auditeur (interne ou externe)
+Collaborateur standard (End User)
+1. Gestion des utilisateurs et accès
+Domaine
+Utilisateur
+Utilisateur principal de la plateforme. Vérifie 
+et documente la conformité de l’entreprise 
+aux référentiels normatifs (ISO 27001 en 
+priorité).
+Gère la configuration technique du système : 
+comptes utilisateurs, rôles, import des 
+référentiels.
+Personne désignée comme propriétaire d’une 
+politique interne ; reçoit les rappels avant 
+son expiration.
+Vision globale de la conformité de 
+l’entreprise. Rôle mentionné dans le cahier 
+des charges, mais à valider pour la première 
+version.
+Responsable métier d’un risque ou d’un actif. 
+Rôle à valider, car il dépend d’une décision 
+non encore prise sur l’inclusion de la gestion 
+des risques.
+Évalue l’efficacité des contrôles de façon 
+indépendante. Rôle mentionné dans le cahier 
+des charges, mais à valider : son périmètre 
+exact n’est pas encore détaillé pour la 
+première version.
+Utilisateur soumis aux politiques internes, en 
+simple consultation. Rôle à valider — 
+explicitement hors périmètre de la première 
+version.
+User Story
+Priorité
+MVP ?
+Accès
+Administrateur
+En tant 
+qu’Administrate
+ur, je veux créer 
+un compte 
+utilisateur et lui 
+attribuer un 
+Must Have
+Oui
+Domaine
+Utilisateur
+Priorité
+MVP ?
+Accès
+Accès
+Utilisateur 
+autorisé
+Administrateur
+User Story
+rôle, afin de 
+contrôler qui 
+accède à la 
+plateforme.
+En tant 
+qu’utilisateur 
+autorisé, je veux 
+me connecter à 
+la plateforme, 
+afin d’accéder à 
+mon espace de 
+travail.
+En tant 
+qu’Administrate
+ur, je veux qu’un 
+Compliance 
+Officer ne puisse 
+pas accéder aux 
+fonctions 
+réservées à 
+l’administration, 
+afin de protéger 
+les paramètres 
+sensibles du 
+système.
+Must Have
+Must Have
+Oui
+Oui
+Critères d’acceptation : - Un utilisateur ne peut se connecter que s’il possède un compte 
+valide. - Chaque utilisateur a un rôle qui détermine ce qu’il peut voir et faire. - Un utilisateur 
+avec le rôle Compliance Officer ne peut pas modifier les paramètres système.
+2. Gestion des organisations
+Domaine
+Utilisateur
+User Story
+Priorité
+MVP ?
+Organisation
+Administrateur
+En tant 
+qu’Administrate
+ur, je veux créer 
+l’organisation 
+DRÄXLMAIER 
+dans le système, 
+afin d’y 
+rattacher les 
+politiques et les 
+référentiels de 
+conformité.
+Must Have
+Oui
+Critères d’acceptation : - L’organisation est visible et sert de point de rattachement pour les 
+autres données.
+Une organisation hiérarchisée en départements (Business Units) est mentionnée dans le cahier 
+des charges mais reste à valider : sa nécessité réelle n’est pas confirmée pour la première 
+version.
+3. Gestion des documents et politiques
+Domaine
+Utilisateur
+User Story
+Priorité
+MVP ?
+Politiques
+Politiques
+Politiques
+Compliance 
+Officer
+Compliance 
+Officer
+Responsable 
+d’une politique
+En tant que 
+Compliance 
+Officer, je veux 
+importer un 
+document de 
+politique avec 
+un titre, un 
+propriétaire et 
+une date 
+d’expiration, 
+afin de 
+centraliser les 
+politiques 
+internes.
+En tant que 
+Compliance 
+Officer, je veux 
+consulter la liste 
+des politiques 
+déjà importées, 
+afin de 
+retrouver 
+facilement un 
+document 
+existant.
+En tant que 
+responsable 
+d’une politique, 
+je veux recevoir 
+un rappel 
+automatique par 
+email avant son 
+expiration, afin 
+de la mettre à 
+jour à temps.
+Must Have
+Must Have
+Must Have
+Oui
+Oui
+Oui
+Critères d’acceptation : - Une politique importée possède un titre, un propriétaire et une date 
+d’expiration. - La politique peut être consultée par les utilisateurs autorisés. - Un email de 
+rappel est envoyé automatiquement avant l’expiration.
+Un circuit de validation formel (par exemple : validation juridique puis validation de la direction 
+avant publication d’une politique) est mentionné dans le cahier des charges, mais classé après 
+le MVP.
+4. Gestion de la conformité
+Domaine
+Utilisateur
+User Story
+Priorité
+MVP ?
+Conformité
+Conformité
+Conformité
+Conformité
+Administrateur
+Compliance 
+Officer
+Compliance 
+Officer
+Compliance 
+En tant 
+qu’Administrate
+ur, je veux 
+importer un 
+référentiel 
+normatif (ISO 
+27001), afin de 
+disposer de la 
+liste structurée 
+des exigences à 
+respecter.
+En tant que 
+Compliance 
+Officer, je veux 
+consulter les 
+exigences d’un 
+référentiel 
+importé, afin de 
+savoir ce qui 
+doit être 
+couvert.
+En tant que 
+Compliance 
+Officer, je veux 
+relier une 
+politique ou un 
+contrôle à une 
+exigence 
+réglementaire, 
+afin de 
+démontrer que 
+cette exigence 
+est couverte.
+En tant que 
+Must Have
+Must Have
+Must Have
+Should Have
+Oui
+Oui
+Oui
+Oui
+Domaine
+Priorité
+MVP ?
+Utilisateur
+Officer
+User Story
+Compliance 
+Officer, je veux 
+attribuer un 
+statut 
+(conforme, non 
+conforme, non 
+applicable) à 
+une exigence 
+couverte, afin de 
+formaliser 
+l’évaluation de 
+conformité.
+Critères d’acceptation : - Les exigences d’un référentiel importé sont consultables 
+individuellement. - Une politique ou un contrôle peut être relié à une ou plusieurs exigences. - 
+Un statut peut être attribué et modifié par un Compliance Officer.
+Le support de plusieurs référentiels normatifs en même temps (par exemple ISO 27001 et ISO 9001 
+simultanément) est mentionné dans le cahier des charges, mais classé après le MVP : la 
+première version se concentre sur un seul référentiel.
+5. Gestion des contrôles
+Domaine
+Utilisateur
+User Story
+Priorité
+MVP ?
+Contrôles
+Contrôles
+Compliance 
+Officer
+Compliance 
+Officer
+En tant que 
+Compliance 
+Officer, je veux 
+créer un 
+contrôle interne, 
+afin de 
+documenter une 
+mesure qui 
+répond à une 
+exigence de 
+conformité.
+En tant que 
+Compliance 
+Officer, je veux 
+consulter les 
+contrôles 
+associés à une 
+exigence, afin de 
+vérifier la 
+couverture de 
+Must Have
+Must Have
+Oui
+Oui
+Domaine
+Utilisateur
+Priorité
+MVP ?
+User Story
+conformité.
+Critères d’acceptation : - Un contrôle créé peut être relié à une ou plusieurs exigences. - La 
+liste des contrôles est consultable par exigence.
+6. Gestion des preuves
+Domaine
+Utilisateur
+User Story
+Priorité
+MVP ?
+Preuves
+Preuves
+Compliance 
+Officer
+Compliance 
+Officer
+En tant que 
+Compliance 
+Officer, je veux 
+associer un 
+fichier de preuve 
+à une exigence 
+couverte, afin de 
+justifier le statut 
+de conformité 
+attribué.
+En tant que 
+Compliance 
+Officer, je veux 
+consulter et 
+télécharger une 
+preuve déposée, 
+afin de la 
+vérifier ou de la 
+présenter lors 
+d’un audit.
+Must Have
+Must Have
+Oui
+Oui
+Critères d’acceptation : - Une preuve peut être déposée et rattachée à une exigence ou un 
+contrôle. - La preuve est visible et téléchargeable par les utilisateurs autorisés.
+7. Gestion des audits
+Domaine
+Utilisateur
+User Story
+Priorité
+MVP ?
+Audits
+Compliance 
+Officer
+En tant que 
+Compliance 
+Officer, je veux 
+attribuer un 
+résultat simple 
+(conforme, non 
+conforme, non 
+applicable) à 
+Should Have
+Oui
+Domaine
+Utilisateur
+Priorité
+MVP ?
+User Story
+une vérification 
+de contrôle, afin 
+de formaliser un 
+constat rapide.
+Critères d’acceptation : - Un résultat peut être attribué à une vérification. - Ce résultat est 
+visible et daté.
+À valider avec l’encadreur : un processus d’audit complet (planification d’un audit, 
+définition de son périmètre, clôture formelle) est mentionné dans le cahier des charges, mais 
+n’est pas encore défini en détail. Seule la version simplifiée ci-dessus est prévue pour l’instant.
+8. Gestion des risques
+À valider avec l’encadreur.
+Le cahier des charges indique explicitement que l’inclusion d’un module de gestion des risques 
+dans la première version du projet n’est pas encore décidée. Les fonctionnalités suivantes 
+sont donc présentées comme des candidates possibles, et non comme des éléments confirmés 
+du MVP.
+Domaine
+Utilisateur
+User Story
+Priorité
+MVP ?
+Risques
+Risques
+Risques
+Risk Owner
+Risk Owner
+Risk Owner
+En tant que Risk 
+Owner, je veux 
+enregistrer un 
+risque, afin de 
+pouvoir le suivre 
+dans le temps.
+En tant que Risk 
+Owner, je veux 
+évaluer un 
+risque selon sa 
+probabilité et 
+son impact, afin 
+d’obtenir un 
+niveau de 
+risque.
+En tant que Risk 
+Owner, je veux 
+relier un 
+contrôle à un 
+risque, afin de 
+réduire ce 
+risque.
+À valider
+À valider
+À valider
+Non
+Non
+Non
+Ces fonctionnalités ne doivent pas être présentées comme faisant partie de la première version 
+tant que la décision n’a pas été prise avec l’encadreur.
+9. Gestion des actions correctives
+À valider avec l’encadreur.
+Le cahier des charges mentionne le besoin de suivre des constats et des actions correctives, mais 
+ces éléments ne sont pas encore définis précisément et dépendent directement de la décision 
+concernant la gestion des risques (domaine 8 ci-dessus).
+Domaine
+Utilisateur
+User Story
+Priorité
+MVP ?
+Actions 
+correctives
+Actions 
+correctives
+10. Notifications
+Domaine
+Compliance 
+Officer
+Compliance 
+Officer
+Utilisateur
+En tant que 
+Compliance 
+Officer, je veux 
+créer un constat 
+lorsqu’un écart 
+de conformité 
+est confirmé, 
+afin de le 
+documenter 
+formellement.
+En tant que 
+Compliance 
+Officer, je veux 
+assigner une 
+action corrective 
+avec une 
+échéance à un 
+constat, afin de 
+suivre sa 
+résolution.
+User Story
+À valider
+À valider
+Priorité
+Non
+Non
+MVP ?
+Notifications
+Responsable 
+d’une politique
+En tant que 
+responsable 
+d’une politique, 
+je veux être 
+averti par email 
+avant 
+l’expiration de 
+cette politique, 
+afin d’anticiper 
+Must Have
+Oui
+Domaine
+Utilisateur
+Priorité
+MVP ?
+User Story
+sa révision.
+Critères d’acceptation : - Un email est envoyé automatiquement un nombre de jours défini 
+avant l’expiration.
+(Cette fonctionnalité est la même que celle présentée au domaine 3 — elle est simplement 
+rappelée ici car elle touche aussi les notifications.)
+Un système d’alerte automatique vers un autre outil (par exemple créer un ticket dans un 
+système externe en cas de problème de conformité) est mentionné comme possible amélioration, 
+mais reste optionnel (Could Have).
+11. Reporting
+Domaine
+Utilisateur
+User Story
+Priorité
+MVP ?
+Reporting
+Responsable 
+(CISO/RSSI)
+En tant que 
+responsable, je 
+veux consulter 
+un tableau de 
+bord 
+synthétique de 
+l’état de 
+conformité, afin 
+d’avoir une 
+vision 
+d’ensemble 
+rapide.
+Could Have
+Optionnel
+Un rapport de conformité formel complet (comme une Déclaration d’Applicabilité) est 
+mentionné dans le cahier des charges, mais classé après le MVP.
+12. Fonctionnalités IA
+Ces fonctionnalités sont séparées du reste, car elles viennent en complément du système une fois 
+que la base fonctionnelle (domaines 1 à 7) est en place. Dans tous les cas, l’intelligence artificielle 
+propose des résultats, mais ne prend jamais de décision de conformité à la place d’un utilisateur : 
+toute proposition doit être validée par une personne.
+Recherche documentaire intelligente
+En tant qu’utilisateur GRC, je veux rechercher des informations dans les politiques 
+avec une recherche en langage naturel, afin de retrouver rapidement les informations 
+pertinentes sans lire tout le document.
+Priorité : Should Have — MVP ? Oui, si le temps le permet
+Critères d’acceptation : - L’utilisateur peut poser une question en langage courant. - La 
+réponse indique clairement de quel document et de quelle section elle provient.
+Assistant documentaire
+En tant qu’utilisateur GRC, je veux poser une question sur les politiques et obtenir une 
+réponse accompagnée des sources utilisées, afin de vérifier l’information moi-même 
+si nécessaire.
+Priorité : Should Have — MVP ? Oui, si le temps le permet
+Critères d’acceptation : - Chaque réponse mentionne explicitement sa source. - Si aucune 
+information pertinente n’est trouvée, le système l’indique clairement plutôt que d’inventer une 
+réponse.
+Détection de gaps
+En tant que Compliance Officer, je veux identifier automatiquement des écarts 
+potentiels entre les exigences et les politiques existantes, afin de faciliter mon analyse 
+de conformité.
+Priorité : Should Have — MVP ? Oui, si le temps le permet
+Critères d’acceptation : - Le système propose une liste d’écarts potentiels. - Chaque 
+proposition est clairement indiquée comme non officielle tant qu’elle n’a pas été validée par un 
+Compliance Officer.
+Fonctionnalités IA future
+Deux capacités supplémentaires sont envisagées pour une phase ultérieure, une fois que la base 
+GRC et l’assistant documentaire seront stabilisés :
+• Un serveur d’interrogation avancée (MCP) permettant à un outil externe de 
+questionner directement les données du système.
+• Des agents IA autonomes capables d’effectuer plusieurs actions à la suite sans 
+intervention humaine à chaque étape.
+Ces deux capacités sont volontairement mises de côté pour l’instant : elles présentent un risque 
+plus élevé (erreurs en chaîne, manque de contrôle humain) et ne seront envisagées qu’une fois 
+le reste du système bien établi.
+Résumé du périmètre
+MVP :
+• Connexion et gestion des utilisateurs avec des rôles.
+• Création de l’organisation DRÄXLMAIER dans le système.
+• Import et consultation des politiques, avec rappel automatique avant expiration.
+• Import d’un référentiel de conformité (ISO 27001) et consultation de ses exigences.
+• Création de contrôles et rattachement aux exigences.
+• Dépôt et consultation de preuves de conformité.
+• Attribution d’un statut de conformité et d’un résultat de vérification simple.
+• Recherche intelligente dans les politiques et assistance à la détection d’écarts, si le 
+temps le permet.
+À valider avec l’encadreur :
+• L’inclusion ou non d’un module complet de gestion des risques.
+• L’inclusion ou non d’un suivi formel des constats et des actions correctives.
+• La nécessité réelle d’une organisation hiérarchisée en plusieurs départements.
+• Le processus d’audit complet (planification, périmètre, clôture).
+Après le MVP :
+• Circuit de validation formel des politiques (plusieurs niveaux d’approbation).
+• Support de plusieurs référentiels de conformité en même temps.
+• Rapport de conformité formel complet.
+• Tableau de bord synthétique de l’état de conformité.
+• Alertes automatiques vers d’autres outils externes.
+IA :
+• Recherche intelligente et assistant documentaire avec citation des sources : envisagés 
+dès la première version, si le temps le permet.
+• Détection automatique d’écarts de conformité : envisagée dès la première version, si le 
+temps le permet.
+• Interrogation avancée par un outil externe (MCP) et agents IA autonomes : prévus 
+uniquement pour une phase ultérieure, une fois le reste du système stabilisé.
+Ce document reflète l’état actuel du cahier des charges du projet. Les éléments marqués « à 
+valider » nécessitent une décision avec l’encadreur avant d’être considérés comme définitifs

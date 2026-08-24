@@ -1,0 +1,2155 @@
+
+> Source document:
+> Cahier des Charges GRC DRÄXLMAIER v1.0.0
+>
+> Format:
+> Textual representation of the source PDF.
+>
+> Authority:
+> The original validated document remains the authoritative source.
+>
+> Important:
+> This file must not introduce, remove, or modify requirements.Cahier des Charges — Plateforme GRC Intelligente DRÄXLMAIER
+Version : 1.0.0 — Draft Date : 14 Août 2026 (provisoire) Auteur : Mohamed Abidi (provisoire) Statut : 
+Brouillon — nécessite validation par l’encadreur avant d’être considéré comme baseline 
+officielle Classification / Confidentialité : Interne DRÄXLMAIER (provisoire)
+Ce document est une baseline de cadrage destinée à être revue et validée. Il n’est pas 
+une spécification technique définitive et ne préjuge d’aucun choix technologique non 
+explicitement validé.
+2. Historique du document
+Version
+Date
+Auteur
+Description
+1.0.0
+14 Août 2026 (provisoire)
+3. Contexte du projet
+Mohamed Abidi (provisoire)
+Version initiale — 
+Draft, en attente de 
+validation
+DRÄXLMAIER est une entreprise du secteur automobile, environnement dans lequel les 
+exigences de gouvernance, de gestion des risques et de conformité (GRC) occupent une place 
+structurante, notamment au regard de référentiels de sécurité de l’information tels qu’ISO 
+27001.
+Dans ce type de contexte industriel, les processus GRC reposent typiquement sur une 
+combinaison de documents (politiques, procédures), de tableurs, et d’outils partiels, ce qui peut 
+conduire à une fragmentation de l’information : les politiques de sécurité, les preuves de 
+conformité et le suivi des contrôles ne sont pas nécessairement centralisés dans un système 
+unique.
+Cette description du contexte de fragmentation est une hypothèse de travail 
+générique, pas un constat établi sur l’organisation réelle de DRÄXLMAIER. Les 
+processus internes précis de DRÄXLMAIER en matière de GRC (outils déjà utilisés, niveau de 
+maturité, organisation de l’équipe conformité) ne sont pas connus à ce stade et doivent être 
+validés avec les interlocuteurs concernés.
+Le projet part du constat suivant, à valider : - Besoin potentiel de centralisation des politiques 
+et exigences de conformité dans un référentiel unique. - Besoin potentiel de traçabilité des 
+actions, décisions et statuts de conformité (piste d’audit). - Besoin potentiel de visibilité sur 
+l’état de conformité vis-à-vis des référentiels normatifs applicables. - Opportunité 
+d’assistance par intelligence artificielle, en particulier pour accélérer la recherche 
+documentaire et la détection d’écarts de conformité, deux tâches identifiées comme 
+chronophages dans les processus de conformité en général.
+À VALIDER AVEC DRÄXLMAIER : confirmation de ces besoins et de leur priorité relative, à 
+partir des processus réellement en place.
+4. Problématique
+4.1 Problématique métier
+Les équipes en charge de la conformité doivent démontrer, de façon documentée et traçable, 
+que les politiques internes couvrent les exigences d’un référentiel normatif (ISO 27001 en 
+priorité). Cette démonstration repose aujourd’hui, dans la plupart des organisations 
+comparables, sur un travail manuel de lecture et de croisement entre documents.
+4.2 Problématique fonctionnelle
+Il n’existe pas, à la connaissance de ce document, de plateforme interne DRÄXLMAIER 
+permettant de centraliser politiques, exigences normatives, preuves et statuts de conformité 
+dans un système unique et consultable. À VALIDER AVEC DRÄXLMAIER.
+4.3 Problématique technique
+Le projet doit être conçu pour rester extensible (ajout futur d’autres référentiels normatifs, de 
+capacités IA supplémentaires) sans que cette extensibilité complexifie excessivement le socle 
+initial.
+4.4 Problématique liée aux données
+Les documents de politique et de conformité constituent, par nature, des données sensibles. 
+Leur traitement — en particulier s’ils sont exposés à un modèle de langage — soulève des 
+questions de confidentialité et de résidence des données qui ne sont pas encore tranchées (voir 
+Section 26).
+4.5 Problématique liée à l’IA
+Une assistance par intelligence artificielle sur ce périmètre pose un risque spécifique : une 
+réponse générée de façon incorrecte ou non vérifiable (hallucination) sur un sujet de 
+conformité peut avoir des conséquences directes en cas d’audit externe. Le projet doit donc 
+traiter la fiabilité et la vérifiabilité des réponses IA comme une contrainte de conception 
+centrale, et non comme un raffinement ultérieur.
+5. Vision du projet
+Construire une plateforme GRC destinée à DRÄXLMAIER, structurée autour 
+d’un socle de gouvernance, de gestion des risques et de conformité 
+fonctionnel et auditable, puis enrichie progressivement d’une couche 
+d’intelligence artificielle sécurisée assistant la recherche documentaire, 
+l’analyse de conformité et l’identification d’écarts — cette couche IA opérant 
+sous supervision humaine systématique et sans jamais se substituer aux 
+mécanismes déterministes qui demeurent la source de vérité du système.
+Cette formulation reprend la vision de départ en explicitant deux principes structurants 
+retenus au stade du cadrage : (1) le socle GRC déterministe précède et conditionne la couche IA, 
+(2) la supervision humaine reste systématique sur toute capacité IA touchant à un statut de 
+conformité officiel.
+6. Objectifs
+6.1 Objectifs métier
+• Centraliser les politiques de sécurité et les exigences de conformité dans un référentiel 
+unique. (Proposition)
+• Réduire le temps consacré à la recherche documentaire lors de la préparation d’audits. 
+(Proposition)
+• Améliorer la traçabilité des décisions et statuts de conformité. (Proposition)
+6.2 Objectifs fonctionnels
+• Permettre l’import et la gestion de documents de politique. (Proposition)
+• Permettre l’import d’un référentiel normatif (ISO 27001 en priorité) et le mappage des 
+politiques aux exigences correspondantes. (Proposition)
+• Permettre la collecte et le rattachement de preuves de conformité. (Proposition)
+6.3 Objectifs techniques
+• Garantir une architecture modulaire permettant l’ajout progressif de capacités 
+(référentiels supplémentaires, capacités IA) sans refonte majeure. (Proposition)
+• Assurer une piste d’audit complète et immuable des actions effectuées dans le système. 
+(Proposition)
+6.4 Objectifs sécurité
+• Mettre en œuvre un contrôle d’accès basé sur les rôles (RBAC). (Proposition)
+• Garantir qu’aucune donnée sensible ne soit accessible sans autorisation appropriée. 
+(Proposition)
+• Le choix précis du fournisseur d’identité (IdP), de la stratégie de chiffrement et de 
+l’infrastructure d’hébergement reste TBD (Section 26).
+6.5 Objectifs IA
+• Permettre une recherche sémantique en langage naturel sur les documents de politique, 
+avec citation vérifiable de la source. (Proposition)
+• Assister la détection d’écarts entre une politique existante et une exigence normative. 
+(Proposition)
+• Garantir que toute proposition générée par l’IA reste soumise à validation humaine 
+avant d’acquérir un statut officiel dans le système (voir Section 21). (Proposition, 
+principe structurant)
+• Les capacités avancées (MCP, agents autonomes) sont positionnées comme Future, non 
+comme objectif du MVP (voir Section 9 et 23).
+6.6 Objectifs d’industrialisation
+• Mettre en place, dès les fondations du projet, une chaîne d’intégration continue 
+permettant des livraisons régulières et testées. (Proposition)
+• Documenter les décisions d’architecture au fil du projet (registre de décisions, Section 
+28).
+7. Étude de l’existant
+Cette section synthétise une comparaison réalisée entre le projet DRÄXLMAIER et deux 
+plateformes GRC open-source de référence, Eramba et verinice. Cette comparaison a été établie 
+à partir de documentation publique et de matériel d’analyse disponible ; certains éléments 
+n’ont pas fait l’objet d’une vérification directe du code source et sont signalés comme tels.
+7.1 Architecture
+Aspect
+Eramba
+verinice
+Nature
+Modèle de données
+Automatisation
+Application web (PHP), 
+déploiement conteneurisé
+Application client lourd (Java 
+/ Eclipse RCP) avec serveur 
+associé
+Schéma relationnel structuré Modèle dynamique piloté par 
+configuration (fichier de 
+mapping XML)
+Tâches planifiées et 
+déclencheurs événementiels
+Moteur de workflow 
+structuré (BPMN)
+Source : documentation d’architecture publique. Niveau de détail interne (implémentation 
+exacte) non vérifié — UNKNOWN / NEEDS VERIFICATION au-delà de ce qui est documenté 
+publiquement.
+7.2 Fonctionnalités
+Les deux plateformes couvrent, de façon documentée, les domaines suivants : gestion des 
+politiques, évaluation et suivi des risques, cartographie de conformité vers des référentiels 
+normatifs, collecte de preuves d’audit, piste d’audit, et contrôle d’accès par rôle.
+Des différences de maturité relative sont documentées : - Eramba est documenté comme 
+disposant d’un système de notifications et rappels automatiques particulièrement développé. - 
+verinice est documenté comme disposant d’une modélisation organisationnelle hiérarchique 
+plus poussée et d’un moteur de génération de rapports de conformité formels (type Statement 
+of Applicability).
+7.3 Workflows
+verinice est documenté comme s’appuyant sur un moteur de workflow structuré pour les 
+approbations (type BPMN). Eramba est documenté comme reposant davantage sur une logique 
+réactive (règles conditionnelles déclenchées par des tâches planifiées) plutôt que sur un moteur 
+de workflow formel.
+7.4 Sécurité
+Les deux plateformes sont documentées comme disposant d’un contrôle d’accès par rôle et 
+d’une piste d’audit. Le niveau de détail des mécanismes de sécurité sous-jacents (chiffrement, 
+gestion des secrets) n’a pas été vérifié en profondeur — UNKNOWN / NEEDS VERIFICATION.
+7.5 Extensibilité
+verinice est documenté comme offrant une extensibilité par configuration (le modèle de 
+données peut être étendu sans modification du code). Eramba est documenté comme offrant 
+une extensibilité par champs personnalisés et par une interface de programmation applicative 
+(API).
+7.6 Automatisation
+Eramba est documenté comme disposant de capacités d’intégration sortante (déclenchement 
+d’appels vers des systèmes tiers) plus développées que verinice sur ce point spécifique.
+7.7 Intelligence artificielle — uniquement ce qui est vérifiable
+Eramba est documenté comme proposant une intégration native avec le protocole MCP (Model 
+Context Protocol), permettant à un agent d’intelligence artificielle d’interroger les données 
+structurées de la plateforme (risques, contrôles) via une interface programmatique sécurisée.
+Cette capacité porte sur l’interrogation de données structurées existantes en base, et 
+non sur une compréhension sémantique de documents non structurés (recherche dans le texte 
+de politiques). Cette distinction est importante : elle signifie que cette capacité ne recouvre pas 
+les objectifs de recherche sémantique documentaire visés par le présent projet (Section 6.5).
+verinice n’est, à la connaissance de ce document, associé à aucune capacité d’intelligence 
+artificielle intégrée nativement dans sa version standard. UNKNOWN / NEEDS VERIFICATION 
+pour toute évolution récente non couverte par les sources consultées.
+Aucune des deux plateformes n’est documentée comme proposant une capacité de recherche 
+sémantique sur des documents non structurés (RAG) ni de détection automatisée d’écarts de 
+conformité assistée par IA.
+8. Gap Analysis
+Capability Eramba verinice
+DRÄXLMAIE
+R Need
+Proposed 
+Platform
+AI 
+Opportunity
+Gestion 
+documentair
+e des 
+politiques
+Disponible Disponible Oui, socle de 
+base
+MUST HAVE Faible — 
+fonction 
+standard, 
+non 
+différenciant
+e
+Import et 
+mappage 
+d’un 
+référentiel 
+normatif
+Disponible Disponible 
+(fort sur BSI 
+IT
+Grundschutz
+)
+Oui, socle de 
+base (ISO 
+27001 en 
+priorité)
+MUST HAVE Moyen — 
+l’IA peut 
+assister la 
+proposition 
+de mappage
+Collecte de 
+preuves 
+d’audit
+Disponible Disponible Oui MUST HAVE Faible
+Piste d’audit Disponible Disponible Oui MUST HAVE Faible
+Contrôle 
+d’accès par 
+rôle
+Disponible Disponible Oui, a 
+minima
+MUST HAVE Faible
+Workflow 
+d’approbatio
+n formel 
+multi
+niveaux
+Partiel Disponible 
+(fort)
+UNKNOWN / 
+NEEDS 
+VERIFICATI
+ON — besoin 
+non confirmé 
+par 
+DRÄXLMAIE
+R
+Non retenu 
+au MVP
+Faible
+Rappels 
+automatiques 
+d’échéance
+Disponible 
+(fort)
+Partiel Confirmé 
+comme 
+nécessaire
+MUST HAVE Faible
+Évaluation et 
+scoring de 
+risque
+Disponible Disponible UNKNOWN / 
+NEEDS 
+VERIFICATI
+ON — tension 
+non résolue, 
+voir Section 9
+Non retenu 
+au MVP, à 
+confirmer
+Faible à 
+moyen si 
+retenu 
+ultérieureme
+nt
+Modélisation 
+organisation
+nelle 
+hiérarchique
+Partiel Disponible 
+(fort)
+UNKNOWN / 
+NEEDS 
+VERIFICATI
+ON
+Non retenu 
+au MVP
+Faible
+Génération 
+de rapport de 
+Partiel Disponible 
+(fort)
+UNKNOWN / 
+NEEDS 
+Non retenu 
+au MVP
+Faible
+Capability
+conformité 
+formel (type 
+SoA)
+Eramba
+verinice
+DRÄXLMAIE
+R Need
+Proposed 
+Platform
+AI 
+Opportunity
+VERIFICATI
+ON
+Recherche 
+sémantique 
+documentair
+e avec 
+citation
+Détection de 
+gap de 
+conformité 
+assistée par 
+IA
+Interrogation 
+de données 
+structurées 
+par agent IA 
+(type MCP)
+Gestion des 
+risques tiers
+Non 
+disponible
+Non 
+disponible
+Disponible
+Disponible
+9. Périmètre du projet
+9.1 In Scope
+Non 
+disponible
+Non 
+disponible
+Non 
+disponible
+Partiel
+Oui, 
+différenciant
+Oui, 
+différenciant
+UNKNOWN / 
+NEEDS 
+VERIFICATI
+ON
+UNKNOWN / 
+NEEDS 
+VERIFICATI
+ON
+• Gestion documentaire des politiques (import, stockage, consultation).
+Élevé — 
+SHOULD 
+HAVE
+SHOULD 
+HAVE
+Future
+Non retenu 
+au MVP
+opportunité 
+de 
+différenciati
+on 
+principale
+Élevé — 
+opportunité 
+de 
+différenciati
+on 
+principale
+Faible dans 
+l’immédiat 
+— capacité 
+déjà couverte 
+par des 
+solutions 
+existantes
+Faible
+• Import d’un référentiel normatif unique (ISO 27001 en priorité, À VALIDER AVEC 
+DRÄXLMAIER).
+• Mappage entre politiques/contrôles et exigences normatives.
+• Collecte et rattachement de preuves de conformité.
+• Piste d’audit des actions effectuées dans le système.
+• Contrôle d’accès basé sur les rôles (a minima deux rôles : Compliance Officer, 
+Administrateur).
+• Rappels automatiques avant expiration d’une politique, avec notification par courrier 
+électronique au responsable de la politique.
+• Recherche sémantique en langage naturel sur les documents de politique, avec citation 
+de la source.
+• Assistance à la détection d’écarts de conformité entre une politique et une exigence 
+normative.
+• Gestion des risques : enregistrement d'un risque, évaluation (probabilité × impact), rattachement d'un contrôle à un risque.
+9.2 Out of Scope (pour la version initiale)
+• Workflow d’approbation formel multi-niveaux.
+• Support simultané de plusieurs référentiels normatifs.
+• Génération automatisée de rapports de conformité formels (type Statement of 
+Applicability).
+• Gestion des risques tiers / fournisseurs.
+• Intégration MCP (interrogation de données structurées par agent IA externe).
+• Agents IA autonomes.
+Ces exclusions reflètent un choix de périmètre restreint destiné à concentrer l’effort initial sur un 
+socle Conformité fonctionnel et sur les deux capacités IA différenciantes. Elles doivent être 
+confirmées avec l’encadreur et, si possible, avec DRÄXLMAIER — en particulier l’exclusion du 
+module de gestion des risques, qui constitue un point de vigilance explicite (voir Section 26).
+9.3 Future Scope
+• Extension à d’autres référentiels normatifs (ISO 9001, ISO 14001, BSI IT-Grundschutz, 
+etc.).
+• Risque résiduel, traitement du risque et scoring avancé.
+• Workflow d’approbation formel.
+• Génération de rapports de conformité formels.
+• Intégration MCP.
+• Agents IA autonomes assistant des tâches GRC multi-étapes, sous supervision humaine 
+renforcée.
+10. Personas
+Persona
+Responsabilit
+é
+Objectifs
+Besoins
+Actions 
+principales
+Statut
+Compliance 
+Officer
+Administrat
+eur système
+Vérifier et 
+documenter 
+la conformité 
+aux 
+référentiels 
+normatifs 
+applicables
+Gérer la 
+configuration 
+Accès 
+centralisé 
+aux 
+Préparer les 
+audits 
+efficacement, 
+identifier les 
+écarts de 
+conformité
+Assurer le 
+bon 
+politiques et 
+exigences, 
+assistance à 
+la recherche
+Contrôle des 
+rôles et des 
+Persona 
+principal du 
+MVP
+Importer des 
+politiques, 
+consulter les 
+exigences, 
+valider les 
+mappages 
+proposés, 
+déposer des 
+preuves
+Gérer les 
+utilisateurs 
+Confirmé 
+Persona
+CISO / RSSI
+Responsabilit
+é
+technique et 
+les accès
+Vision 
+globale de la 
+posture de 
+conformité
+Objectifs
+fonctionnem
+ent et la 
+sécurité du 
+système
+Disposer 
+d’une 
+visibilité sur 
+l’état de 
+conformité 
+global
+Besoins
+accès
+Tableau de 
+bord 
+synthétique
+Risk Owner Responsable 
+métier d’un 
+actif ou d’un 
+risque
+Auditeur 
+(interne ou 
+externe)
+Collaborate
+ur standard 
+(End User)
+Évaluer 
+l’efficacité 
+des contrôles
+Soumis aux 
+politiques 
+internes
+Gérer les 
+risques de 
+son 
+périmètre
+Vérifier la 
+conformité 
+de façon 
+indépendant
+e
+Prendre 
+connaissance 
+des 
+politiques 
+applicables
+Module de 
+gestion des 
+risques
+Accès en 
+consultation 
+aux preuves 
+et statuts
+Accès en 
+lecture 
+simple
+Actions 
+principales
+et les rôles, 
+configurer le 
+référentiel 
+importé
+Consulter 
+l’état de 
+conformité, 
+valider des 
+décisions 
+sensibles
+Évaluer un 
+risque, 
+accepter ou 
+traiter un 
+risque
+Consulter les 
+preuves, 
+valider ou 
+rejeter un 
+contrôle
+Consulter 
+une politique
+Statut
+pour le MVP
+TO 
+VALIDATE 
+— persona 
+non 
+prioritaire au 
+MVP tel que 
+défini, 
+pertinence à 
+confirmer
+CONFIRMED 
+— MVP
+TO 
+VALIDATE 
+— rôle non 
+détaillé au 
+MVP, à 
+préciser
+TO 
+VALIDATE 
+— hors 
+périmètre du 
+MVP tel que 
+défini
+Responsable 
+d'une politique
+Gérer le cycle 
+de vie de ses 
+politiques
+Recevoir les 
+rappels avant 
+expiration
+Mettre à jour 
+les documents
+Confirmé
+
+11. Architecture fonctionnelle
+Module
+Objectif
+Organization 
+Management
+Identity & 
+Access
+Governance
+Risk 
+Management
+Compliance 
+Management
+Control 
+Management
+Policy 
+Management
+Asset 
+Management
+Audit 
+Management
+Représenter la 
+structure 
+organisationnell
+e concernée
+Authentifier les 
+utilisateurs et 
+gérer leurs 
+droits
+Gérer le cycle de 
+vie des 
+politiques
+Gérer 
+l’identification 
+et le traitement 
+des risques
+Gérer la 
+conformité à un 
+référentiel 
+normatif
+Gérer les 
+contrôles 
+internes
+Gérer les 
+documents de 
+politique
+Gérer les actifs 
+de l’organisation
+Gérer le cycle de 
+vie d’un audit 
+formel
+Fonctionnalités 
+principales
+Gestion d’une 
+organisation 
+(structure 
+hiérarchique 
+détaillée non 
+retenue au 
+MVP)
+Authentification
+, gestion des 
+rôles (RBAC)
+Import, 
+consultation, 
+rappel 
+d’échéance
+Enregistrement 
+d'un risque, évaluation 
+probabilité/impact, 
+rattachement à un contrôle
+Import de 
+référentiel, 
+mappage 
+exigence
+politique, statut 
+de conformité
+Rattachement à 
+une exigence de 
+conformité
+Upload, 
+métadonnées, 
+propriétaire, 
+date 
+d’expiration
+Non détaillé — 
+dépend de 
+l’inclusion du 
+module Risque
+Non détaillé au 
+niveau 
+processus 
+complet au MVP
+Dépendances
+—
+IdP TBD
+Document 
+Management
+Asset 
+Management 
+(non retenu)
+Governance, 
+Control 
+Management
+Compliance 
+Management
+Document 
+Management
+—
+Compliance 
+Management
+Priorité
+MUST HAVE 
+(version 
+simplifiée)
+MUST HAVE
+MUST HAVE
+MUST HAVE 
+(version 
+simplifiée)
+MUST HAVE
+MUST HAVE 
+(version 
+simplifiée)
+MUST HAVE
+Future / TBD
+SHOULD HAVE 
+(version 
+simplifiée : 
+statut 
+Module
+Objectif
+Fonctionnalités 
+principales
+Dépendances
+Finding & 
+Remediation
+Evidence 
+Management
+Document 
+Management
+Reporting
+AI Layer
+Gérer les 
+constats et 
+actions 
+correctives
+Gérer les 
+preuves de 
+conformité
+Gérer le stockage 
+et les 
+métadonnées 
+documentaires
+Restituer l’état 
+de conformité
+Assister la 
+recherche et 
+l’analyse 
+documentaire
+12. Core GRC MVP
+MUST HAVE
+Non détaillé — 
+dépend de la 
+maturité du 
+module Audit
+Dépôt et 
+rattachement de 
+preuves à un 
+contrôle/exigen
+ce
+Stockage, 
+versionning 
+basique
+Non détaillé au 
+niveau formel 
+(SoA) au MVP
+Recherche 
+sémantique avec 
+citation, 
+assistance à la 
+détection de gap
+Audit 
+Management
+Document 
+Management, 
+Control 
+Management
+—
+Compliance 
+Management
+Document 
+Management, 
+Compliance 
+Management
+Priorité
+Pass/Fail/Not 
+Applicable)
+Future / TBD
+MUST HAVE
+MUST HAVE
+Future / TBD
+SHOULD HAVE
+• Gestion documentaire des politiques (upload, métadonnées, consultation).
+• Import d’un référentiel normatif unique (ISO 27001).
+• Mappage manuel entre politique/contrôle et exigence normative.
+• Collecte de preuves rattachées à un élément de conformité.
+• Piste d’audit des actions effectuées.
+• Contrôle d’accès basé sur les rôles (a minima 2 rôles).
+• Rappel automatique par courrier électronique avant expiration d’une politique, adressé 
+au responsable identifié.
+• Enregistrement et évaluation simple d'un risque, rattachement à un contrôle.
+SHOULD HAVE
+• Statut d’évaluation d’un contrôle (conforme / non conforme / non applicable).
+• Recherche sémantique en langage naturel sur les politiques, avec citation de la section 
+source.
+• Assistance à la détection d’écarts entre une politique existante et une exigence 
+normative, sous forme de proposition soumise à validation humaine.
+COULD HAVE
+• Tableau de bord synthétique de conformité.
+• Intégration sortante vers un système tiers (notification, ticket) en cas d’écart critique.
+FUTURE
+• Module de gestion des risques complet.
+• Workflow d’approbation formel multi-niveaux.
+• Support de plusieurs référentiels normatifs simultanés.
+• Génération de rapport de conformité formel (type Statement of Applicability).
+• Gestion des risques tiers.
+• Intégration MCP.
+• Agents IA autonomes.
+13. Domain Model fonctionnel
+Entité
+Responsabilité
+Attributs 
+conceptuels 
+importants
+Relations
+Cardinalités 
+importantes
+Organization
+User
+Role
+Policy
+ComplianceFra
+mework
+ComplianceRe
+quirement
+Racine du 
+périmètre de la 
+plateforme
+Compte 
+utilisateur du 
+système
+Ensemble de 
+permissions
+Document de 
+politique, source 
+du RAG
+Référentiel 
+normatif (ISO 
+27001 au MVP)
+Exigence 
+individuelle 
+d’un référentiel
+ControlMappin Lien entre une 
+Nom, identifiant Possède des 
+Policy, des 
+ComplianceFra
+mework en 
+usage
+Identifiant, nom, 
+statut
+Nom, 
+description des 
+permissions
+Titre, 
+propriétaire 
+(owner), date 
+d’expiration, 
+statut
+Nom, version
+Identifiant, 
+libellé, 
+description
+Statut 
+Associé à un ou 
+plusieurs Role
+Associé à un ou 
+plusieurs User
+Rattachée à une 
+Organization, 
+associée à des 
+ControlMapping
+Contient des 
+ComplianceRequ
+irement
+Associée à des 
+ControlMapping
+Relie 
+1 organisation → 
+N entités 
+enfants
+N ↔ N avec Role
+N ↔ N avec User
+1 Policy → N 
+ControlMapping 
+potentiels
+1 Framework → 
+N Requirement
+N ↔ N avec 
+ControlMapping
+N ↔ N
+Entité
+g
+Responsabilité
+Policy/Control 
+et une 
+ComplianceRequ
+irement
+Attributs 
+conceptuels 
+importants
+(conforme / non 
+conforme / non 
+applicable), 
+origine (manuel 
+ou proposé par 
+IA)
+Control
+Evidence
+Document
+AuditLog
+Contrôle interne 
+rattaché à une 
+exigence
+Preuve déposée 
+pour justifier la 
+conformité
+Fichier source 
+ingéré (politique 
+ou preuve)
+Trace immuable 
+des actions du 
+système
+Nom, 
+description
+Fichier, date de 
+dépôt, déposant
+Nom de fichier, 
+type, date 
+d’ingestion
+Utilisateur, 
+horodatage, 
+nature de 
+l’action, entité 
+concernée
+Relations
+Policy/Control 
+et 
+ComplianceRequ
+irement
+Rattaché à une 
+ou plusieurs 
+ComplianceRequ
+irement via 
+ControlMapping
+Rattachée à un 
+ControlMapping
+Peut être associé 
+à une Policy ou 
+une Evidence
+Rattaché à un 
+User et à l’entité 
+modifiée
+Cardinalités 
+importantes
+—
+N Evidence → 1 
+ControlMapping
+—
+N AuditLog → 1 
+User
+Risk, Risk Assessment : intégrées au périmètre MVP (version simplifiée).
+
+Entités mentionnées dans le référentiel de conception initial mais non retenues au 
+MVP :
+- Asset - Risk Treatment - Finding - Action (au sens remédiation formelle) - Business Unit (en tant qu’entité hiérarchique distincte d’Organization)
+Ces entités ne sont pas définies en détail dans ce document tant que leur inclusion n’est pas 
+tranchée, afin de ne pas figer une architecture de données non validée.
+14. Workflows métier
+14.1 Risk Management
+TBD — Ce workflow n'est pas défini dans ce document. Le module de gestion 
+des risques n’étant pas retenu au périmètre du MVP (Section 9), la définition détaillée du 
+workflow (acteurs, états, transitions) est différée à une phase ultérieure, conditionnée à la 
+confirmation de son inclusion.
+14.2 Compliance
+ComplianceFramework (référentiel importé)
+  → ComplianceRequirement (exigences listées)
+  → Policy (document existant, ingéré)
+  → Recherche sémantique / proposition de gap (assistance IA)
+  → ControlMapping (lien exigence ↔ politique/contrôle, proposé ou 
+manuel)
+  → Evidence (preuve déposée)
+  → Validation humaine → Statut (conforme / non conforme / non 
+applicable)
+• Acteurs : Compliance Officer (principal), Administrateur (configuration du référentiel).
+• États : Non mappé → Mappé (proposition IA ou manuelle) → Preuve déposée → Statut 
+validé.
+• Transitions : Une proposition de mappage générée par IA n’acquiert le statut « Mappé 
+» qu’après validation explicite par le Compliance Officer.
+• Validations : Toute proposition de gap ou de mappage IA doit être validée par un 
+utilisateur autorisé avant de constituer un statut officiel.
+• Auditabilité : Chaque changement de statut est journalisé dans l’AuditLog.
+• Human approval : Requis systématiquement avant officialisation d’un statut de 
+conformité.
+Le mécanisme de résolution en cas de désaccord entre une proposition générée par IA et 
+l’évaluation humaine n’est pas défini à ce stade — TBD.
+14.3 Audit
+TBD — Ce workflow n'est présenté qu'en version simplifiée au MVP. La 
+version retenue au MVP (Section 12, SHOULD HAVE) se limite à l’attribution d’un statut 
+(conforme / non conforme / non applicable) à un ControlMapping, sans processus formel de 
+planification d’audit, de scope, ni de clôture. Le workflow complet (Audit → Scope → Evidence 
+→ Finding → Action → Verification → Closure) est différé en Future Scope, dans l’attente d’une 
+confirmation du besoin.
+15. Exigences fonctionnelles
+FR-001 — Ingestion de politiques documentaires
+Description : Le système doit permettre l’upload d’un document de politique et son association 
+à une Organization, avec des métadonnées de base (titre, propriétaire, date de révision). Actor : 
+Compliance Officer Priority : MUST HAVE Dependencies : Aucune Acceptance Criteria : Un 
+document uploadé est visible dans la liste des politiques, avec son titre, son propriétaire et sa 
+date d’expiration renseignés.
+FR-002 — Import d’un référentiel de conformité
+Description : Le système doit permettre l’import d’un catalogue d’exigences (référentiel ISO 
+27001), sous un format à déterminer. Actor : Administrateur Priority : MUST HAVE 
+Dependencies : Aucune Acceptance Criteria : La liste des exigences importées est 
+consultable et associée au référentiel correspondant.
+FR-003 — Recherche sémantique documentaire avec citation
+Description : Un utilisateur autorisé peut poser une question en langage naturel sur le 
+contenu des politiques et recevoir une réponse citant la section source du document concerné. 
+Actor : Compliance Officer Priority : SHOULD HAVE Dependencies : FR-001, pipeline de 
+recherche sémantique (à définir en phase d’architecture technique) Acceptance Criteria : 
+Chaque réponse fournie contient une référence identifiable au document et à la section source 
+ayant permis de la générer. Le mécanisme précis de vérification de cette citation reste TBD.
+FR-004 — Assistance à la détection d’écart de conformité
+Description : Le système propose une comparaison entre une politique existante et une 
+exigence de conformité, et signale les écarts potentiels sous forme de proposition. Actor : 
+Compliance Officer Priority : SHOULD HAVE Dependencies : FR-002, FR-003 Acceptance 
+Criteria : Toute proposition d’écart générée doit être présentée comme non officielle jusqu’à 
+validation par un Compliance Officer. Le seuil de qualité (précision/rappel) attendu pour cette 
+fonctionnalité reste TBD.
+FR-005 — Collecte de preuves de conformité
+Description : Un utilisateur autorisé peut associer un fichier de preuve à un élément de 
+conformité (ControlMapping). Actor : Compliance Officer Priority : MUST HAVE 
+Dependencies : FR-001, FR-002 Acceptance Criteria : Une preuve déposée est visible, 
+téléchargeable, et liée à l’élément de conformité concerné.
+FR-006 — Piste d’audit des actions
+Description : Toute création, modification ou suppression d’un élément du système doit être 
+journalisée de façon immuable. Actor : Système (transversal) Priority : MUST HAVE 
+Dependencies : Identity & Access Acceptance Criteria : Chaque action est journalisée avec 
+l’identité de l’utilisateur, l’horodatage et la nature du changement, et cette journalisation n’est 
+pas modifiable a posteriori par un utilisateur standard.
+FR-007 — Contrôle d’accès basé sur les rôles
+Description : Le système distingue au minimum les rôles Compliance Officer et 
+Administrateur, avec des permissions différenciées. Actor : Administrateur Priority : MUST 
+HAVE Dependencies : Identity & Access, fournisseur d’identité TBD Acceptance Criteria : Un 
+utilisateur avec le rôle Compliance Officer ne peut pas accéder aux fonctions réservées à 
+l’Administrateur.
+FR-008 — Rappel automatique avant expiration d’une politique
+Description : Le système doit envoyer une notification par courrier électronique au 
+responsable identifié d’une politique, un nombre de jours configurable avant sa date 
+d’expiration. Actor : Système (déclenché automatiquement), destinataire : propriétaire de la 
+politique Priority : MUST HAVE Dependencies : FR-001 (la Policy doit porter un propriétaire 
+et une date d’expiration), service d’envoi de courrier électronique TBD Acceptance Criteria : 
+Un courrier électronique est envoyé automatiquement N jours avant l’expiration d’une 
+politique (N configurable), et cet envoi est journalisé dans la piste d’audit.
+16. Exigences non fonctionnelles
+Catégorie
+Exigence
+Statut
+Security
+Performance
+Availability
+Scalability
+Maintainability
+Auditability
+Observability
+Accessibility
+Data protection
+Le système doit chiffrer les 
+données sensibles au repos et 
+en transit.
+Une recherche sémantique 
+doit retourner un résultat 
+dans un délai raisonnable 
+pour un usage interactif.
+TBD — aucune exigence de 
+disponibilité (SLA) n’a été 
+définie à ce stade.
+Le système doit pouvoir 
+absorber la croissance du 
+volume documentaire sans 
+dégradation majeure.
+Le code doit suivre des 
+conventions permettant une 
+prise en main par un tiers.
+Toute action affectant un 
+statut de conformité doit être 
+traçable (voir Section 18).
+TBD — stratégie de 
+journalisation applicative et 
+de supervision non définie.
+TBD — aucune exigence 
+d’accessibilité n’a été définie 
+à ce stade.
+Les documents de politique et 
+de conformité doivent être 
+traités conformément aux 
+exigences de confidentialité 
+Proposition — mécanisme 
+précis TBD
+Proposition — seuil chiffré 
+TBD
+TBD
+Proposition générale, sans 
+seuil chiffré
+Proposition
+Décidé (principe)
+TBD
+TBD
+Proposition — cadre précis À 
+VALIDER AVEC 
+DRÄXLMAIER
+Catégorie
+Statut
+Exigence
+applicables.
+Reliability
+Testability
+TBD
+Les fonctionnalités MUST 
+HAVE doivent faire l’objet de 
+tests automatisés couvrant 
+les scénarios d’acceptation.
+17. Security & Access Control
+TBD
+Proposition
+• Authentication : Mécanisme d’authentification à définir. TBD — le choix d’un 
+fournisseur d’identité (IdP) n’est pas arrêté.
+• Authorization : Contrôle d’accès basé sur les rôles (RBAC), avec au minimum deux 
+rôles au MVP (Compliance Officer, Administrateur).
+• RBAC : Modèle de permissions à granularité minimale au MVP, extensible.
+• Least privilege : Principe retenu comme objectif de conception ; application concrète à 
+détailler en phase d’architecture technique.
+• Tenant / organization isolation : TBD — la nécessité d’une isolation multi
+organisation n’est pas confirmée, le MVP étant conçu pour une organisation unique 
+(DRÄXLMAIER).
+• Audit trail : Voir Section 18.
+• Secrets management : TBD — stratégie de gestion des secrets (clés API, identifiants) 
+non définie.
+• Encryption : TBD — mécanisme de chiffrement au repos et en transit non précisé.
+• Data access control : Le principe retenu est qu’un accès à un document ou à une 
+preuve doit être conditionné au rôle de l’utilisateur ; l’implémentation précise du 
+filtrage, en particulier pour la couche de recherche sémantique, reste TBD.
+18. Auditability & Traceability
+Le système doit pouvoir tracer, au minimum : - la création d’un élément (politique, mappage, 
+preuve) ; - la modification d’un élément ; - la suppression d’un élément (si autorisée) ; - le 
+changement de statut d’un ControlMapping ; - l’approbation ou la validation d’une proposition 
+(y compris une proposition générée par IA) ; - l’action d’un utilisateur (identité, horodatage) ; - 
+une action système automatisée (par exemple, un rappel automatique envoyé) ; - une 
+interaction avec la couche IA lorsqu’elle aboutit à une proposition soumise à validation 
+(recherche, gap détecté).
+Exigence retenue : toute interaction avec la couche IA ayant conduit à une proposition doit 
+être journalisée avec la question posée, la ou les sources citées, et la décision humaine prise en 
+réponse (validée, rejetée, ignorée). Le format précis de cette journalisation reste à définir en 
+phase d’architecture technique.
+19. Architecture technique cible
+Architecture logique conceptuelle, présentée sans imposer de choix technologique non validé :
+Frontend
+  ↓
+API
+  ↓
+Application Layer
+  ↓
+Domain Layer
+  ↓
+Infrastructure
+  ↓
+Database
+Couche IA, positionnée en complément de l’architecture principale :
+AI Layer
+  ↓
+RAG (recherche sémantique documentaire)
+  ↓
+LLM (génération de réponse)
+  ↓
+MCP (Future — non retenu au MVP)
+  ↓
+Agents (Future — non retenu au MVP)
+Statut des éléments d’architecture
+Élément
+Statut
+Séparation en couches (Frontend / API / 
+Application / Domain / Infrastructure / 
+Database)
+Positionnement du RAG en couche 
+additionnelle, non substitutive au socle 
+déterministe
+Choix du framework backend
+Choix du framework frontend
+Choix de la base de données relationnelle
+Choix de la base vectorielle
+Choix du LLM (interne ou externe)
+Choix du modèle d’embeddings
+Infrastructure d’hébergement (cloud / on
+premise / hybride)
+Fournisseur d’identité (IdP)
+PROPOSED
+PROPOSED (principe structurant, Section 21)
+TBD
+TBD
+TBD
+TBD
+TBD
+TBD
+TBD
+TBD
+Aucun de ces éléments n’est arrêté dans le présent document. Leur validation relève d’une 
+revue d’architecture technique dédiée.
+20. AI Architecture Roadmap
+AI Foundation
+Document ingestion → Processing → Embeddings → Vector storage → 
+Retrieval → Reranking → RAG evaluation
+• Objectif : construire le pipeline permettant la recherche sémantique documentaire (FR
+003).
+• Données utilisées : documents de politique ingérés (Section 15, FR-001).
+• Niveau d’autonomie : aucune action automatique sur les données GRC ; la couche 
+produit uniquement des résultats de recherche.
+• Human approval : non requis pour une simple recherche ; requis pour toute 
+proposition de mappage dérivée (FR-004).
+• Risques : qualité de récupération (retrieval) insuffisante, absence de mécanisme 
+d’évaluation formalisé à ce stade — voir Section 22.
+AI-GRC
+• Policy Q&A (FR-003) : SHOULD HAVE, retenu au MVP.
+• Compliance Gap Detection (FR-004) : SHOULD HAVE, retenu au MVP, sous forme de 
+proposition soumise à validation.
+• Risk Analysis : Future — dépend de la confirmation d’inclusion du module Risque.
+• Evidence Analysis : Future — non retenu au MVP.
+• Recommendations : Future — non détaillé à ce stade.
+Pour chacune de ces capacités : les données utilisées sont limitées aux documents et référentiels 
+importés dans le système ; aucune capacité n’opère de modification automatique d’un statut de 
+conformité sans validation humaine.
+MCP
+Statut : Future, explicitement non retenu au MVP. GRC tools, Resources, Permission model, 
+Audit logging : non détaillés dans ce document, cette capacité étant hors périmètre de la version 
+initiale.
+Agents
+Statut : Future, explicitement non retenu au MVP. Risk Agent, Compliance Agent, Audit 
+Agent, Document Agent : non détaillés dans ce document. Cette capacité présente un niveau de 
+risque (autonomie, hallucination en chaîne) jugé incompatible avec une intégration précoce et 
+nécessite une maturité préalable du socle RAG et de la gouvernance IA.
+21. GRC vs AI Boundary
+Capability
+Deterministic
+Risk 
+scoring
+Complianc
+e mapping 
+(propositio
+n initiale)
+Policy 
+analysis 
+(résumé, 
+recherche)
+Evidence 
+analysis
+Oui (si le module est 
+retenu 
+ultérieurement)
+Non
+Non
+Non
+AI-Assisted
+Non recommandé 
+sans validation 
+systématique
+Oui
+Oui
+Oui (assistance)
+Human Approval
+Requis
+Requis avant tout 
+statut officiel
+Recommandé, non 
+nécessairement 
+bloquant pour un 
+usage exploratoire
+Requis
+Rationale
+Un score 
+de risque a 
+un impact 
+décisionnel 
+direct ; le 
+déterminis
+me est 
+nécessaire 
+à 
+l’auditabili
+té
+Capacité 
+différencia
+nte du 
+projet, 
+mais 
+devant 
+rester une 
+propositio
+n, non une 
+source de 
+vérité
+Risque de 
+résumé 
+imprécis 
+moindre 
+qu’un 
+statut 
+officiel, 
+mais réel
+Une 
+preuve mal 
+validée par 
+erreur a un 
+impact 
+direct en 
+audit 
+externe
+Capability
+Recommen
+dations
+Deterministic
+Non
+AI-Assisted
+Oui
+Findings 
+(constat 
+officiel)
+Reporting
+Oui
+Oui pour les 
+données factuelles 
+agrégées
+L’IA peut proposer 
+un constat candidat
+Possible en 
+assistance de mise 
+en forme
+Human Approval
+Requis
+Requis avant 
+officialisation
+Recommandé pour 
+tout rapport destiné 
+à un tiers externe
+Rationale
+Une 
+recomman
+dation 
+reste une 
+suggestion, 
+jamais une 
+action 
+automatiq
+ue
+Un Finding 
+a une 
+valeur 
+d’audit 
+formelle
+Un rapport 
+de 
+conformité 
+doit rester 
+fondé sur 
+des 
+données 
+déterminis
+tes
+Principe directeur retenu : l’intelligence artificielle peut assister, recommander, résumer ou 
+rechercher ; l’état de conformité faisant autorité demeure sous le contrôle de la logique métier 
+déterministe et des utilisateurs autorisés.
+22. AI Security & Governance
+Risque
+Mitigation
+Detection
+Human 
+control
+Logging
+Evaluation
+Hallucinatio
+n
+Prompt 
+injection (via 
+un document 
+Citation 
+systématique 
+de la source ; 
+mécanisme 
+de 
+vérification 
+de la citation 
+TBD
+TBD
+TBD
+TBD
+Validation 
+humaine 
+systématique 
+avant tout 
+statut officiel
+—
+TBD — 
+aucun 
+Interaction 
+journalisée 
+(Section 18)
+—
+protocole 
+d’évaluation 
+formalisé à 
+ce stade
+—
+Risque Mitigation Detection
+Human 
+control Logging Evaluation
+ingéré)
+Document 
+poisoning
+TBD TBD — — —
+Unauthorize
+d retrieval
+Filtrage de 
+permission 
+au niveau de 
+la recherche, 
+mécanisme 
+précis TBD
+TBD — Journalisatio
+n des 
+requêtes
+—
+Data leakage 
+(si LLM 
+externe 
+utilisé)
+Dépend du 
+choix LLM 
+interne/exter
+ne, TBD
+— — — —
+Outdated 
+information
+Mécanisme 
+de mise à 
+jour de 
+l’index 
+documentair
+e lors d’une 
+révision de 
+politique, 
+TBD
+TBD — — —
+Conflicting 
+documents
+TBD — 
+aucune 
+stratégie de 
+détection de 
+contradiction 
+inter
+documents 
+n’est définie
+TBD Signalement 
+soumis à 
+validation 
+humaine en 
+cas de 
+détection
+— —
+Excessive 
+agent 
+autonomy
+Non 
+applicable au 
+MVP (agents 
+non retenus)
+— — — —
+MCP tool 
+abuse
+Non 
+applicable au 
+MVP (MCP 
+non retenu)
+— — — —
+Model failure TBD TBD — — —
+Lack of 
+explainabilit
+y
+Citation 
+systématique 
+comme 
+— — — —
+Risque
+Lack of 
+auditability
+Mitigation
+mesure de 
+transparence 
+minimale
+Journalisatio
+n de chaque 
+interaction 
+IA (Section 
+18)
+Detection
+Human 
+control
+Logging
+Evaluation
+—
+—
+Décidé 
+(principe)
+—
+Plusieurs cellules restent volontairement marquées TBD : les combler à ce stade reviendrait à 
+figer des mécanismes de sécurité IA qui doivent faire l’objet d’une conception technique dédiée.
+23. Roadmap
+Phase 0 — Cadrage & Architecture
+• 0.1 Étude : comparaison de l’existant réalisée (Section 7, Section 8).
+• 0.2 Cahier des charges : objet du présent document.
+• 0.3 Architecture : à réaliser sur la base des décisions issues de ce cahier des charges, en 
+particulier la résolution des éléments TBD de la Section 19.
+• 0.4 Roadmap : objet de la présente section.
+Phase 1 — Core GRC MVP
+• 1.1 Platform Foundation : authentification, RBAC minimal, piste d’audit, gestion 
+documentaire de base, intégration continue.
+• 1.2 Risk & Control Core : TBD — inclusion conditionnée à la confirmation du besoin 
+(Section 9, Section 26). Si non confirmé, cette sous-phase est retirée du MVP.
+• 1.3 Compliance Core : import du référentiel ISO 27001, mappage, collecte de preuves, 
+rappels automatiques (FR-001 à FR-002, FR-005 à FR-008).
+Dépendances : 1.1 précède 1.2 et 1.3. Livrables : un socle GRC fonctionnel couvrant au 
+minimum le domaine Conformité. Critères de sortie : les critères d’acceptation MUST HAVE 
+de la Section 24 sont satisfaits.
+Phase 2 — Advanced GRC
+Fonctionnalités listées en Future Scope (Section 9.3) non couvertes par la Phase 1 : workflow 
+d’approbation formel, multi-référentiels, reporting formel, gestion des risques tiers. 
+Dépendances : Phase 1 complète et stabilisée.
+Phase 3 — AI Foundation / RAG
+Construction du pipeline de recherche sémantique (FR-003) : ingestion, traitement 
+documentaire, embeddings, stockage vectoriel, recherche, réévaluation. Dépendances : 
+disponibilité d’un corpus documentaire issu de la Phase 1 (Policy Management).
+Phase 4 — AI-GRC
+Mise en œuvre de la détection de gap assistée par IA (FR-004) et, le cas échéant, d’autres 
+capacités d’assistance. Dépendances : Phase 3 stabilisée, mécanisme de citation vérifiable 
+disponible.
+Phase 5 — MCP & AI Agents
+Statut : Future, hors périmètre de la roadmap MVP. Non planifiée dans le présent 
+document.
+Phase 6 — Enterprise Hardening
+Renforcement de la sécurité, observabilité, sauvegarde/reprise, tests de sécurité, gouvernance 
+IA. Dépendances : Phases 1 à 4 stabilisées. TBD quant à son inclusion dans le calendrier du 
+projet initial, compte tenu des contraintes de temps identifiées (Section 25).
+24. Critères d’acceptation du MVP
+• Un utilisateur autorisé peut importer une politique et la consulter.
+• Un utilisateur autorisé peut importer un référentiel de conformité (ISO 27001) et 
+consulter la liste des exigences.
+• Un utilisateur autorisé peut créer un mappage entre une politique/un contrôle et une 
+exigence.
+• Une preuve peut être associée à un mappage de conformité.
+• Un mappage peut recevoir un statut (conforme / non conforme / non applicable).
+• Les opérations de création, modification et suppression sont journalisées de façon 
+vérifiable.
+• Les permissions empêchent un utilisateur non autorisé d’accéder aux fonctions 
+d’administration.
+• Un rappel automatique par courrier électronique est envoyé au propriétaire d’une 
+politique avant son expiration, et cet envoi est vérifiable dans la piste d’audit.
+Critères d’acceptation spécifiques à l’IA (mesurables)
+• Une requête de recherche sémantique retourne une réponse accompagnée d’au moins 
+une citation identifiable (document et section).
+• Une proposition de gap de conformité générée par le système est explicitement marquée 
+comme non officielle tant qu’elle n’a pas été validée par un utilisateur autorisé.
+• TBD : seuil quantitatif de qualité de récupération (précision/rappel) et taux 
+d’hallucination acceptable — ces métriques doivent être définies et mesurées lors d’une 
+phase de test dédiée, sur un jeu de questions de référence à constituer.
+25. Risks & Constraints
+Risque
+Sur-scope 
+par 
+rapport au 
+temps 
+disponible
+Catégorie
+Business / 
+Scope
+Probability Impact
+Élevée
+Élevé
+Hallucinati
+on de la 
+couche IA 
+sur un 
+sujet de 
+conformité
+Qualité de 
+récupérati
+on 
+(retrieval) 
+insuffisant
+e
+Absence de 
+choix de 
+stack 
+technique 
+validé
+Confidenti
+alité des 
+données si 
+LLM 
+externe 
+utilisé
+AI
+AI / 
+Technical
+Technical
+Data / 
+Security
+Élevée
+Moyenne à 
+élevée
+Élevée (à 
+ce stade du 
+projet)
+Moyenne
+Élevé
+Moyen à 
+élevé
+Moyen
+Élevé
+Mitigation Owner
+Périmètre 
+volontaire
+ment 
+TBD
+restreint 
+(Section 9), 
+exclusion 
+explicite 
+du module 
+Risque et 
+des 
+capacités 
+MCP/Agen
+ts
+Citation 
+systématiq
+ue, 
+validation 
+humaine 
+obligatoire 
+(Section 21, 
+Section 22)
+Évaluation 
+sur jeu de 
+questions 
+de 
+référence à 
+constituer
+Revue 
+d’architect
+ure 
+technique 
+dédiée à 
+programm
+er
+Décision 
+LLM 
+interne/ex
+terne à 
+trancher 
+avec 
+DRÄXLMA
+TBD
+TBD
+TBD
+TBD
+Status
+Ouvert
+Ouvert, 
+mécanisme 
+de 
+détection 
+non défini
+Ouvert
+Ouvert
+Ouvert
+Risque
+Catégorie
+Probability Impact
+Status
+Absence de 
+confirmati
+on sur les 
+processus 
+internes 
+réels de 
+DRÄXLMA
+IER
+Absence de 
+chaîne 
+d’intégrati
+on 
+continue / 
+conteneuri
+sation à ce 
+stade
+Tension 
+non 
+résolue sur 
+l’inclusion 
+du module 
+Risque
+GRC / 
+Business
+Deploymen
+t
+Scope / 
+GRC
+Moyenne
+Moyenne
+Élevée
+26. Open Questions / TBD
+Moyen
+Moyen
+Moyen à 
+élevé
+Mitigation Owner
+IER
+Entretiens 
+de 
+validation 
+à 
+programm
+er avec 
+l’encadreu
+r et/ou 
+DRÄXLMA
+IER
+TBD
+TBD
+Prévu en 
+fondation 
+(Phase 1.1)
+Décision à 
+trancher 
+explicitem
+ent avant 
+de figer la 
+Phase 1.2
+TBD
+• Choix du fournisseur LLM (interne à l’entreprise ou service externe).
+• Choix de l’infrastructure d’hébergement (cloud, on-premise, hybride).
+Ouvert
+Ouvert
+Ouvert
+• Choix du fournisseur d’identité (IdP) — Entra ID ou autre solution déjà en place chez 
+DRÄXLMAIER.
+• Choix de la base de données relationnelle.
+• Choix de la base de données vectorielle.
+• Choix du modèle d’embeddings.
+• Confirmation du ou des référentiels réglementaires réellement prioritaires pour 
+DRÄXLMAIER (ISO 27001 seul, ou autre priorité).
+• Confirmation de l’inclusion ou non du module de gestion des risques dans le périmètre 
+initial.
+• Nature exacte des données autorisées à être exposées à une intelligence artificielle 
+(interne ou externe).
+• Exigences de résidence des données applicables.
+• Identification précise des utilisateurs réels et de leur nombre chez DRÄXLMAIER.
+• Description des workflows internes DRÄXLMAIER réellement en vigueur en matière de 
+gestion des politiques et de conformité.
+• Existence d’un outil ou processus GRC déjà en place chez DRÄXLMAIER à prendre en 
+compte ou à remplacer.
+Ces questions ne sont pas résolues dans le présent document et nécessitent une 
+validation avec l’encadreur et/ou DRÄXLMAIER avant d’être figées.
+27. Assumptions
+ID
+Assumption
+Reason
+Validation Required
+ASM-001
+ASM-002
+ASM-003
+ASM-004
+ASM-005
+Le persona 
+prioritaire du 
+système est le 
+Compliance Officer, 
+pas le Risk Owner
+ISO 27001 est le 
+référentiel normatif 
+prioritaire
+DRÄXLMAIER ne 
+dispose pas 
+actuellement d’un 
+outil GRC centralisé 
+unique
+Le volume de 
+documents de 
+politique à traiter est 
+compatible avec une 
+architecture RAG 
+standard, sans besoin 
+d’optimisation à très 
+grande échelle dès le 
+MVP
+Le service d’envoi de 
+courrier électronique 
+pour les rappels 
+automatiques (FR
+008) peut s’appuyer 
+sur une 
+infrastructure 
+existante ou un 
+Cohérent avec le 
+périmètre restreint 
+retenu (Section 9)
+Cohérence avec le 
+secteur d’activité et 
+la nature des 
+politiques de sécurité 
+de l’information 
+mentionnées en 
+Section 3
+Hypothèse de 
+contexte non vérifiée
+Hypothèse de 
+dimensionnement 
+raisonnable pour un 
+projet de cadrage
+Hypothèse de 
+faisabilité technique 
+de base
+Oui — à confirmer 
+avec DRÄXLMAIER
+Oui — à confirmer 
+explicitement
+Oui — à confirmer 
+avec DRÄXLMAIER
+Oui — à confirmer 
+une fois le corpus 
+réel connu
+Oui — dépend de 
+l’infrastructure 
+DRÄXLMAIER, TBD
+ID
+Reason
+Validation Required
+Assumption
+service standard
+28. Decision Register
+ID
+Decision
+Status
+Rationale
+DEC-001
+DEC-002
+DEC-003
+DEC-004
+DEC-005
+DEC-006
+DEC-007
+Le socle GRC 
+déterministe précède 
+la couche IA dans la 
+séquence de 
+développement
+L’intelligence 
+artificielle ne 
+constitue jamais la 
+source de vérité d’un 
+statut de conformité 
+officiel
+Le périmètre initial 
+se limite à un 
+référentiel normatif 
+unique (ISO 27001)
+MCP et les agents IA 
+autonomes sont 
+exclus du périmètre 
+MVP et positionnés 
+en Future Scope
+Un rappel 
+automatique par 
+courrier électronique 
+avant expiration 
+d’une politique fait 
+partie du périmètre 
+MUST HAVE
+L’inclusion du 
+module de gestion 
+des risques dans le 
+MVP
+Choix du stack 
+technique (backend, 
+ACCEPTED
+ACCEPTED
+PROPOSED
+ACCEPTED
+ACCEPTED
+TBD
+TBD
+Principe retenu pour 
+éviter un projet 
+centré sur l’IA sans 
+fondation métier 
+solide
+Principe de 
+gouvernance IA 
+structurant, retenu 
+dès le cadrage
+Réduction du scope 
+pour rester réaliste 
+dans le temps 
+disponible ; nécessite 
+confirmation
+Aligné avec le niveau 
+de risque identifié 
+pour ces capacités 
+(Section 22)
+Fonctionnalité 
+confirmée comme 
+nécessaire
+Tension non résolue 
+entre le découpage de 
+phases initialement 
+envisagé et le 
+périmètre restreint 
+recommandé ; 
+nécessite une 
+décision explicite
+Aucun choix validé à 
+ce jour ; nécessite 
+ID
+Status
+Decision
+frontend, bases de 
+données)
+Rationale
+une revue 
+d’architecture 
+technique dédiée
+29. Traceability Matrix
+Business Need
+Requirement
+GRC Module
+Technical 
+Capability
+Future AI 
+Capability
+Centraliser les 
+politiques de 
+sécurité
+Aligner les 
+politiques sur 
+ISO 27001
+Réduire le temps 
+de recherche 
+documentaire
+Identifier les 
+écarts de 
+conformité
+Prouver la 
+conformité en 
+cas d’audit
+Garantir la 
+traçabilité des 
+actions
+Restreindre 
+l’accès aux 
+données 
+sensibles
+Anticiper 
+l’expiration des 
+politiques
+30. Glossary
+FR-001
+FR-002
+FR-003
+FR-004
+FR-005
+FR-006
+FR-007
+FR-008
+Policy 
+Management
+Compliance 
+Management
+AI Layer
+Compliance 
+Management, AI 
+Layer
+Evidence 
+Management
+Audit 
+Management 
+(transversal)
+Identity & 
+Access
+Governance
+Stockage 
+documentaire
+Import de 
+référentiel 
+structuré
+Pipeline RAG
+Comparaison 
+assistée par IA
+Stockage et 
+rattachement de 
+preuves
+Journalisation 
+immuable
+RBAC
+Scheduler + 
+service de 
+courrier 
+électronique
+—
+Assistance au 
+mappage (FR
+004)
+Reranking, 
+évaluation de 
+qualité (Phase 
+3/4)
+Recommandatio
+ns de 
+remédiation 
+(Future)
+—
+Journalisation 
+des interactions 
+IA (Section 18)
+—
+—
+• GRC (Governance, Risk & Compliance) : ensemble des pratiques et outils permettant 
+à une organisation de piloter sa gouvernance, de gérer ses risques et de garantir sa 
+conformité réglementaire.
+• Risk (Risque) : événement potentiel dont la survenue aurait un impact négatif sur les 
+objectifs de l’organisation.
+• Control (Contrôle) : mesure mise en place pour réduire un risque ou satisfaire une 
+exigence de conformité.
+• Compliance (Conformité) : état de correspondance entre les pratiques internes et un 
+référentiel normatif ou réglementaire.
+• Policy (Politique) : document formalisant une règle ou une orientation interne.
+• Evidence (Preuve) : élément justifiant qu’un contrôle est effectivement en place et 
+opérant.
+• Audit : processus d’évaluation indépendante de la conformité ou de l’efficacité d’un 
+contrôle.
+• Finding (Constat) : écart ou non-conformité identifié lors d’un audit.
+• Remediation (Remédiation) : action corrective entreprise pour résoudre un Finding.
+• RAG (Retrieval-Augmented Generation) : technique combinant une recherche 
+documentaire et un modèle de langage pour générer une réponse fondée sur des sources 
+identifiées.
+• LLM (Large Language Model) : modèle de langage de grande taille, utilisé pour 
+générer ou analyser du texte.
+• MCP (Model Context Protocol) : protocole permettant à un agent d’intelligence 
+artificielle d’interagir avec des outils ou systèmes externes de façon structurée.
+• AI Agent : système capable d’exécuter une séquence d’actions de façon autonome ou 
+semi-autonome, potentiellement en s’appuyant sur des outils externes.
+• RBAC (Role-Based Access Control) : modèle de contrôle d’accès basé sur l’attribution 
+de rôles à des utilisateurs.
+31. Final Scope Summary
+What we are building
+Une plateforme centralisant la gestion des politiques de sécurité, leur mappage à un référentiel 
+de conformité unique (ISO 27001), la collecte de preuves associées, une piste d’audit complète, 
+un contrôle d’accès basé sur les rôles, et un système de rappel automatique par courrier 
+électronique avant expiration d’une politique — enrichie d’une couche d’assistance par 
+intelligence artificielle permettant la recherche sémantique documentaire avec citation 
+vérifiable et une assistance à la détection d’écarts de conformité, cette couche opérant 
+strictement sous supervision humaine.
+What we are NOT building
+Un clone complet des plateformes GRC de référence existantes. Ne sont pas retenus dans le 
+périmètre initial : un module de gestion des risques complet, un moteur de workflow 
+d’approbation formel multi-niveaux, le support simultané de plusieurs référentiels normatifs, 
+la génération automatisée de rapports de conformité formels, la gestion des risques tiers, une 
+intégration MCP, et des agents IA autonomes.
+What comes later
+L’extension à d’autres référentiels normatifs, un module de gestion des risques (sous réserve de 
+confirmation du besoin), un moteur de workflow formel, un reporting de conformité structuré, 
+une intégration MCP, et des agents IA assistant des tâches GRC multi-étapes sous supervision 
+renforcée.
+What remains TBD
+Le stack technique complet (backend, frontend, bases de données, vector database, LLM, 
+embeddings, infrastructure, IdP), les mécanismes précis de détection d’hallucination et de 
+vérification des citations, les seuils de qualité mesurables pour les capacités IA, l’inclusion ou 
+non du module de gestion des risques, et l’ensemble des questions listées en Section 26.
+32. Versioning
+Version
+Date
+Author
+Status
+Description
+1.0.0
+À compléter
+REVIEW CHECKLIST
+☐
+• À valider par l’encadreur
+☐
+• À valider par DRÄXLMAIER
+☐
+À compléter
+Draft
+Version initiale 
+du cahier des 
+charges, en 
+attente de 
+validation
+• Décisions techniques restantes (Section 19, Section 26 : stack, infrastructure, IdP, 
+LLM, vector database, embeddings)
+☐
+• Exigences métier restantes (confirmation des processus internes réels DRÄXLMAIER, 
+Section 3 et Section 26)
+☐
+• Contraintes de sécurité restantes (Section 17 : chiffrement, gestion des secrets, 
+isolation)
+☐
+• Contraintes IA restantes (Section 22 : mécanismes de détection d’hallucination, seuils 
+de qualité mesurables)
+☐
+• Décision explicite sur l’inclusion du module de gestion des risques dans le MVP (DEC
+006)
+Ce document constitue une baseline de cadrage. Il ne doit pas être considéré comme une 
+spécification technique définitive tant que les éléments marqués TBD n’ont pas été résolus et 
+validés par les parties concernées

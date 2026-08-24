@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="Draxlmaier.GRC.Api/Draxlmaier.GRC.Api.csproj" />
+  <Project Path="Draxlmaier.GRC.Application.UnitTests/Draxlmaier.GRC.Application.UnitTests.csproj" />
+  <Project Path="Draxlmaier.GRC.Application/Draxlmaier.GRC.Application.csproj" />
+  <Project Path="Draxlmaier.GRC.Domain/Draxlmaier.GRC.Domain.csproj" />
+  <Project Path="Draxlmaier.GRC.Infrastructure/Draxlmaier.GRC.Infrastructure.csproj" />
+</Solution>

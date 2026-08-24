@@ -1,0 +1,6 @@
+Id,Name,Description,OrganizationId,CreatedAt
+a37d135a-5212-562f-b3c4-304aa0c21777,Access Review,Revue périodique des accès privilégiés effectuée tous les trimestres par le service informatique.,13233233-f2bd-5e14-925a-696cfccc3e89,2026-01-06T09:00:00Z
+2338ca08-822e-543a-833d-0a8ed09ec784,Password Management,Politique de complexité et de rotation des mots de passe appliquée via Active Directory.,13233233-f2bd-5e14-925a-696cfccc3e89,2026-01-06T09:00:00Z
+151b77eb-366a-5de2-a263-e68f19ad4c28,Backup Testing,Test de restauration des sauvegardes critiques effectué mensuellement.,13233233-f2bd-5e14-925a-696cfccc3e89,2026-01-06T09:00:00Z
+92cde7cf-d5e1-57ec-9892-775b763f3214,Incident Response Procedure,Procédure documentée de réponse aux incidents de sécurité, avec astreinte 24/7.,13233233-f2bd-5e14-925a-696cfccc3e89,2026-01-06T09:00:00Z
+00f6e124-5f9f-55e5-9eed-bd628bb5724f,Multi-Factor Authentication,Authentification multi-facteurs déployée sur les accès distants et privilégiés.,13233233-f2bd-5e14-925a-696cfccc3e89,2026-01-06T09:00:00Z

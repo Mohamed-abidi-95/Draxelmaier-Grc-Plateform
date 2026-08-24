@@ -1,0 +1,7 @@
+Identifier,Title,Description
+5.1,Policies for information security,Information security policy and topic-specific policies shall be defined.
+5.2,Information security roles and responsibilities,All information security responsibilities shall be defined and allocated.
+5.3,Segregation of duties,Conflicting duties and areas of responsibility shall be segregated.
+6.1,Screening,Background verification checks on all candidates to employment shall be carried out.
+7.1,Physical security perimeter,Security perimeters shall be defined and used to protect areas that contain sensitive information.
+8.1,User endpoint devices,Information stored on, processed by or routed via user endpoint devices shall be protected.

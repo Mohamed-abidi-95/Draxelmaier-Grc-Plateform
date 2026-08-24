@@ -1,0 +1,7 @@
+Id,FrameworkId,Code,Title,Description
+baba6be0-3e75-526f-b4d0-e2a193a73e6f,edc7fafe-7d55-5d25-b12b-e7699e98f269,A.5.2,Information security roles and responsibilities,Information security roles and responsibilities shall be defined and allocated according to the organization needs.
+ef646618-55ee-5958-8df2-dd17743727a9,edc7fafe-7d55-5d25-b12b-e7699e98f269,A.8.2,Privileged access rights,The allocation and use of privileged access rights shall be restricted and managed.
+b7d0f76b-8f37-5689-b558-06103b95300e,edc7fafe-7d55-5d25-b12b-e7699e98f269,A.5.17,Authentication information,Allocation and management of authentication information shall be controlled by a management process.
+857c253d-90f2-53bc-a802-278f6ee0039f,edc7fafe-7d55-5d25-b12b-e7699e98f269,A.8.13,Information backup,Backup copies of information shall be maintained and regularly tested in accordance with an agreed backup policy.
+0d3c0d67-dcce-5009-a209-a0f2d4462973,edc7fafe-7d55-5d25-b12b-e7699e98f269,A.5.24,Information security incident management planning,The organization shall plan and prepare for managing information security incidents.
+7043fe37-034b-50f8-a724-74f9df644a48,edc7fafe-7d55-5d25-b12b-e7699e98f269,A.8.16,Monitoring activities,Networks, systems and applications shall be monitored for anomalous behaviour.

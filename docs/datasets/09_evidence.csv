@@ -1,0 +1,4 @@
+Id,ControlMappingId,FileName,UploadedBy,UploadedAt,Description
+30aebeb2-ab97-5a9c-b73b-fa28f7c60e09,fcf991ad-0eb1-58a8-a882-61816c373f95,Access_Review_Q1_2026.pdf,d00f9045-3f5f-5693-9b44-17d4f0e06b18,2026-02-01T10:00:00Z,Rapport de revue des accès privilégiés du premier trimestre 2026 — 3 comptes inactifs identifiés et désactivés.
+167eeee6-7d7a-5fec-b680-ae333d393cdd,e24aa452-49a5-567c-85bd-36a2d628872b,Password_Audit_Feb2026.pdf,d00f9045-3f5f-5693-9b44-17d4f0e06b18,2026-02-02T10:00:00Z,Audit de conformité des mots de passe : 40% des comptes de service utilisent encore le mot de passe par défaut — NON CONFORME à la politique déclarée.
+2c0ca207-fdbb-5521-a4fb-caffd4826607,3ec2dc35-8d42-5464-be1a-3cafc98708ad,Incident_Response_Drill_Jan2026.pdf,d00f9045-3f5f-5693-9b44-17d4f0e06b18,2026-02-04T10:00:00Z,Compte-rendu d'exercice de simulation d'incident de sécurité réalisé en janvier 2026, avec délai de réponse mesuré.

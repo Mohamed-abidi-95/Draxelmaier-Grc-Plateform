@@ -1,0 +1,6 @@
+Id,RequirementId,ControlId,PolicyId,Status,CreatedAt,Scenario
+fcf991ad-0eb1-58a8-a882-61816c373f95,ef646618-55ee-5958-8df2-dd17743727a9,a37d135a-5212-562f-b3c4-304aa0c21777,30634422-6530-56a6-ba91-0d74392b09d7,Compliant,2026-02-01T09:00:00Z,A - Conforme avec preuve valide
+e24aa452-49a5-567c-85bd-36a2d628872b,b7d0f76b-8f37-5689-b558-06103b95300e,2338ca08-822e-543a-833d-0a8ed09ec784,8b3eabea-e125-54a5-a098-f5b87e96f8b8,NonCompliant,2026-02-02T09:00:00Z,B - Non conforme (preuve contredit la politique)
+17c3b8eb-3e28-50fb-9c86-32ab540a26fd,857c253d-90f2-53bc-a802-278f6ee0039f,151b77eb-366a-5de2-a263-e68f19ad4c28,cb14dd25-4696-55ef-af82-400887055a12,Compliant,2026-02-03T09:00:00Z,C - Mappé mais AUCUNE preuve déposée
+3ec2dc35-8d42-5464-be1a-3cafc98708ad,0d3c0d67-dcce-5009-a209-a0f2d4462973,92cde7cf-d5e1-57ec-9892-775b763f3214,5df7db49-add9-5585-9eb7-a7b740bfcce2,Compliant,2026-02-04T09:00:00Z,A - Conforme avec preuve valide
+cbdb3583-8a35-5571-8104-3d6fc39d5d5e,baba6be0-3e75-526f-b4d0-e2a193a73e6f,00f6e124-5f9f-55e5-9eed-bd628bb5724f,67f66080-2edf-5361-b902-2e11c7438cec,NotApplicable,2026-02-05T09:00:00Z,Statut Non Applicable (justifié)
