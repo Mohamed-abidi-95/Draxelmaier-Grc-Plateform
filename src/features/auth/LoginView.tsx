@@ -78,7 +78,7 @@ export const LoginView = () => {
         </div>
 
         <div className="relative z-10 text-slate-500 font-label-sm">
-          &copy; {new Date().getFullYear()} DRAXLMAIER Group. All rights reserved.
+          &copy; {new Date().getFullYear()} SHIELDGRC. All rights reserved.
         </div>
       </div>
 
@@ -116,7 +116,7 @@ export const LoginView = () => {
                   type="email" 
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="admin@draxlmaier.com" 
+                  placeholder="admin@company.com" 
                   required 
                   className="w-full bg-surface-secondary border border-border rounded-lg pl-10 pr-4 py-2.5 font-body-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all placeholder-text-tertiary"
                 />
