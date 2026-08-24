@@ -249,7 +249,7 @@ export const ControlsView = () => {
               <div className="grid grid-cols-2 gap-6 p-4 bg-surface-container-low rounded-xl border border-border">
                 <div>
                   <h4 className="font-label-sm text-text-tertiary uppercase tracking-wider mb-1">ID</h4>
-                  <p className="font-mono text-xs text-text-secondary break-all">{selectedControl.id.split('-')[0]}...</p>
+                  <p className="font-mono text-[11px] text-text-secondary break-all bg-surface px-2 py-1 rounded border border-border mt-1">{selectedControl.id}</p>
                 </div>
                 <div>
                   <h4 className="font-label-sm text-text-tertiary uppercase tracking-wider mb-1">Created At</h4>
