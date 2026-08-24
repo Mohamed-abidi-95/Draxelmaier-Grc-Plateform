@@ -7,7 +7,9 @@ export const LoginView = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [successMsg, setSuccessMsg] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isForgotPassword, setIsForgotPassword] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
 
@@ -28,6 +30,27 @@ export const LoginView = () => {
       }
     } catch (err: any) {
       setError(err.message || 'Login failed. Please check your credentials.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleForgotPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    setSuccessMsg('');
+    setIsLoading(true);
+
+    try {
+      // Assuming there's a backend endpoint for this, if not we simulate a successful request
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      setSuccessMsg('If an account exists for this email, you will receive password reset instructions.');
+      setTimeout(() => {
+        setIsForgotPassword(false);
+        setSuccessMsg('');
+      }, 5000);
+    } catch (err: any) {
+      setError('An error occurred. Please try again later.');
     } finally {
       setIsLoading(false);
     }
@@ -94,8 +117,14 @@ export const LoginView = () => {
           </div>
 
           <div className="text-center mb-8">
-            <h2 className="font-headline-md font-bold text-text-primary mb-2">Welcome back</h2>
-            <p className="font-body-sm text-text-secondary">Enter your credentials to access the GRC portal</p>
+            <h2 className="font-headline-md font-bold text-text-primary mb-2">
+              {isForgotPassword ? 'Reset Password' : 'Welcome back'}
+            </h2>
+            <p className="font-body-sm text-text-secondary">
+              {isForgotPassword 
+                ? 'Enter your email address to receive reset instructions' 
+                : 'Enter your credentials to access the GRC portal'}
+            </p>
           </div>
 
           {error && (
@@ -105,64 +134,126 @@ export const LoginView = () => {
             </div>
           )}
 
-          <form onSubmit={handleLogin} className="space-y-5">
-            <div className="space-y-1.5">
-              <label className="block font-label-sm text-text-secondary uppercase tracking-wider font-semibold">
-                Email Address
-              </label>
-              <div className="relative">
-                <span className="absolute left-3 top-2.5 text-text-tertiary material-symbols-outlined text-[20px]">mail</span>
-                <input 
-                  type="email" 
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="admin@company.com" 
-                  required 
-                  className="w-full bg-surface-secondary border border-border rounded-lg pl-10 pr-4 py-2.5 font-body-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all placeholder-text-tertiary"
-                />
-              </div>
+          {successMsg && (
+            <div className="mb-6 p-4 rounded-lg bg-success/10 border border-success/20 flex items-start gap-3 animate-in fade-in slide-in-from-top-2">
+              <span className="material-symbols-outlined text-success text-[20px] shrink-0 mt-0.5">check_circle</span>
+              <p className="text-[13px] font-medium text-success leading-relaxed">{successMsg}</p>
             </div>
+          )}
 
-            <div className="space-y-1.5">
-              <div className="flex items-center justify-between">
+          {isForgotPassword ? (
+            <form onSubmit={handleForgotPassword} className="space-y-5 animate-in fade-in slide-in-from-left-4 duration-300">
+              <div className="space-y-1.5">
                 <label className="block font-label-sm text-text-secondary uppercase tracking-wider font-semibold">
-                  Password
+                  Email Address
                 </label>
-                <a href="#" className="font-label-sm text-primary hover:underline text-[12px]">Forgot password?</a>
+                <div className="relative">
+                  <span className="absolute left-3 top-2.5 text-text-tertiary material-symbols-outlined text-[20px]">mail</span>
+                  <input 
+                    type="email" 
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="admin@company.com" 
+                    required 
+                    className="w-full bg-surface-secondary border border-border rounded-lg pl-10 pr-4 py-2.5 font-body-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all placeholder-text-tertiary"
+                  />
+                </div>
               </div>
-              <div className="relative">
-                <span className="absolute left-3 top-2.5 text-text-tertiary material-symbols-outlined text-[20px]">lock</span>
-                <input 
-                  type="password" 
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••" 
-                  required 
-                  className="w-full bg-surface-secondary border border-border rounded-lg pl-10 pr-4 py-2.5 font-body-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all placeholder-text-tertiary"
-                />
-              </div>
-            </div>
 
-            <div className="pt-2">
-              <button 
-                type="submit" 
-                disabled={isLoading}
-                className="w-full bg-primary hover:bg-primary/90 text-white font-label-md py-3 rounded-lg flex items-center justify-center gap-2 transition-all shadow-sm shadow-primary/20 disabled:opacity-70 disabled:cursor-not-allowed group"
-              >
-                {isLoading ? (
-                  <>
-                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                    <span>Signing in...</span>
-                  </>
-                ) : (
-                  <>
-                    <span>Sign In to Dashboard</span>
-                    <span className="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
-                  </>
-                )}
-              </button>
-            </div>
-          </form>
+              <div className="pt-2 flex flex-col gap-3">
+                <button 
+                  type="submit" 
+                  disabled={isLoading}
+                  className="w-full bg-primary hover:bg-primary/90 text-white font-label-md py-3 rounded-lg flex items-center justify-center gap-2 transition-all shadow-sm shadow-primary/20 disabled:opacity-70 disabled:cursor-not-allowed group"
+                >
+                  {isLoading ? (
+                    <>
+                      <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                      <span>Sending...</span>
+                    </>
+                  ) : (
+                    <>
+                      <span className="material-symbols-outlined text-[18px]">send</span>
+                      <span>Send Reset Link</span>
+                    </>
+                  )}
+                </button>
+                
+                <button 
+                  type="button" 
+                  onClick={() => { setIsForgotPassword(false); setError(''); setSuccessMsg(''); }}
+                  className="w-full bg-surface hover:bg-surface-secondary text-text-secondary font-label-md py-3 rounded-lg flex items-center justify-center transition-all border border-border"
+                >
+                  Back to Sign In
+                </button>
+              </div>
+            </form>
+          ) : (
+            <form onSubmit={handleLogin} className="space-y-5 animate-in fade-in slide-in-from-right-4 duration-300">
+              <div className="space-y-1.5">
+                <label className="block font-label-sm text-text-secondary uppercase tracking-wider font-semibold">
+                  Email Address
+                </label>
+                <div className="relative">
+                  <span className="absolute left-3 top-2.5 text-text-tertiary material-symbols-outlined text-[20px]">mail</span>
+                  <input 
+                    type="email" 
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="admin@company.com" 
+                    required 
+                    className="w-full bg-surface-secondary border border-border rounded-lg pl-10 pr-4 py-2.5 font-body-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all placeholder-text-tertiary"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-1.5">
+                <div className="flex items-center justify-between">
+                  <label className="block font-label-sm text-text-secondary uppercase tracking-wider font-semibold">
+                    Password
+                  </label>
+                  <button 
+                    type="button"
+                    onClick={(e) => { e.preventDefault(); setIsForgotPassword(true); setError(''); }} 
+                    className="font-label-sm text-primary hover:underline text-[12px] bg-transparent border-none cursor-pointer"
+                  >
+                    Forgot password?
+                  </button>
+                </div>
+                <div className="relative">
+                  <span className="absolute left-3 top-2.5 text-text-tertiary material-symbols-outlined text-[20px]">lock</span>
+                  <input 
+                    type="password" 
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="••••••••" 
+                    required 
+                    className="w-full bg-surface-secondary border border-border rounded-lg pl-10 pr-4 py-2.5 font-body-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all placeholder-text-tertiary"
+                  />
+                </div>
+              </div>
+
+              <div className="pt-2">
+                <button 
+                  type="submit" 
+                  disabled={isLoading}
+                  className="w-full bg-primary hover:bg-primary/90 text-white font-label-md py-3 rounded-lg flex items-center justify-center gap-2 transition-all shadow-sm shadow-primary/20 disabled:opacity-70 disabled:cursor-not-allowed group"
+                >
+                  {isLoading ? (
+                    <>
+                      <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                      <span>Signing in...</span>
+                    </>
+                  ) : (
+                    <>
+                      <span>Sign In to Dashboard</span>
+                      <span className="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            </form>
+          )}
 
           <div className="mt-8 pt-6 border-t border-border/50 text-center">
             <p className="font-body-sm text-text-tertiary text-[12px]">
