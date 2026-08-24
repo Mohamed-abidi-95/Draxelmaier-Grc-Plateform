@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, MoreHorizontal, CheckCircle2, XCircle, HelpCircle, ChevronDown, ChevronRight, Link as LinkIcon } from 'lucide-react';
-import { Card, CardHeader, CardTitle, CardContent } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { apiFetch } from '../../lib/apiClient';
 import { ImportFrameworkModal } from './ImportFrameworkModal';
@@ -44,6 +42,7 @@ export const ComplianceView = () => {
   const [loading, setLoading] = useState(true);
   const [expandedReqs, setExpandedReqs] = useState<Record<string, boolean>>({});
   const [reqMappings, setReqMappings] = useState<Record<string, Mapping[]>>({});
+  const [search, setSearch] = useState('');
 
   const fetchFrameworks = async () => {
     try {
@@ -94,7 +93,6 @@ export const ComplianceView = () => {
         method: 'PATCH',
         body: JSON.stringify({ mappingId, status })
       });
-      // Refresh mappings
       fetchMappings(reqId);
     } catch (err) {
       console.error('Failed to update status', err);
@@ -123,179 +121,232 @@ export const ComplianceView = () => {
     }
   };
 
-  const getStatusIcon = (status: string) => {
+  const getStatusBadge = (status: string) => {
     switch (status) {
-      case 'Compliant': return <CheckCircle2 className="h-5 w-5 text-emerald-500" />;
-      case 'NonCompliant': return <XCircle className="h-5 w-5 text-red-500" />;
-      default: return <HelpCircle className="h-5 w-5 text-slate-400" />;
+      case 'Compliant': return <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold bg-success/10 text-success border border-success/20"><span className="material-symbols-outlined text-[12px] mr-1">check_circle</span>Compliant</span>;
+      case 'NonCompliant': return <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold bg-error/10 text-error border border-error/20"><span className="material-symbols-outlined text-[12px] mr-1">cancel</span>Non Compliant</span>;
+      case 'NotApplicable': return <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold bg-surface-container-low text-text-tertiary border border-border"><span className="material-symbols-outlined text-[12px] mr-1">block</span>N/A</span>;
+      default: return <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold bg-warning/10 text-warning border border-warning/20"><span className="material-symbols-outlined text-[12px] mr-1">help</span>Not Assessed</span>;
     }
   };
 
+  const filteredRequirements = requirements.filter(r => 
+    r.identifier.toLowerCase().includes(search.toLowerCase()) || 
+    r.title.toLowerCase().includes(search.toLowerCase()) || 
+    r.description.toLowerCase().includes(search.toLowerCase())
+  );
+
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="flex-1 flex flex-col gap-6 max-w-[1440px] mx-auto w-full animate-fade-in pb-12">
+      
+      {/* Header Section */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-2">
         <div>
-          <h2 className="text-2xl font-semibold tracking-tight">Compliance Frameworks</h2>
-          <p className="text-muted-foreground text-sm">Monitor adherence to regulatory and internal standards.</p>
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-primary/10 rounded-lg">
+              <span className="material-symbols-outlined text-primary text-[24px]">verified</span>
+            </div>
+            <h1 className="font-headline-lg text-text-primary tracking-tight">Compliance Frameworks</h1>
+          </div>
+          <p className="font-body-md text-text-secondary mt-2">Monitor adherence to regulatory and internal standards.</p>
         </div>
-        <Button onClick={() => setIsImportModalOpen(true)}>
-          <Plus className="mr-2 h-4 w-4" />
-          Import Framework (CSV)
+        <Button onClick={() => setIsImportModalOpen(true)} className="bg-primary hover:bg-primary/90 text-white shadow-sm px-4 py-2 flex items-center gap-2 rounded-lg transition-all hover:shadow-md">
+          <span className="material-symbols-outlined text-[18px]">upload_file</span>
+          Import Framework
         </Button>
       </div>
 
       {frameworks.length === 0 && !loading && (
-        <div className="text-center py-12 text-muted-foreground border border-dashed rounded-lg bg-slate-50/50">
-          No frameworks imported yet. Click the button above to import your first ISO 27001 CSV.
+        <div className="bg-surface border border-dashed border-border rounded-xl p-16 text-center">
+          <div className="w-16 h-16 bg-surface-secondary rounded-full flex items-center justify-center mx-auto mb-4">
+            <span className="material-symbols-outlined text-[32px] text-text-tertiary">library_books</span>
+          </div>
+          <h3 className="font-headline-sm text-text-primary mb-2">No frameworks imported yet</h3>
+          <p className="font-body-sm text-text-secondary">Click the button above to import your first CSV framework (e.g., ISO 27001).</p>
         </div>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {frameworks.map((fw) => (
-          <Card 
-            key={fw.id} 
-            className={`flex flex-col cursor-pointer transition-colors ${selectedFrameworkId === fw.id ? 'ring-2 ring-primary border-transparent' : 'hover:bg-slate-50/50'}`}
-            onClick={() => setSelectedFrameworkId(fw.id)}
-          >
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle>{fw.name} ({fw.version})</CardTitle>
-              <MoreHorizontal className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent className="flex-1 flex flex-col gap-4">
-              <p className="text-sm text-muted-foreground">{fw.description}</p>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+      {frameworks.length > 0 && (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {frameworks.map((fw) => (
+            <div 
+              key={fw.id} 
+              className={`flex flex-col p-5 rounded-xl border transition-all cursor-pointer group ${selectedFrameworkId === fw.id ? 'bg-primary/5 border-primary shadow-sm' : 'bg-surface border-border hover:border-primary/50 hover:bg-surface-secondary/50'}`}
+              onClick={() => setSelectedFrameworkId(fw.id)}
+            >
+              <div className="flex items-start justify-between mb-3">
+                <div className="flex items-center gap-2">
+                  <span className={`material-symbols-outlined text-[20px] ${selectedFrameworkId === fw.id ? 'text-primary' : 'text-text-tertiary group-hover:text-primary transition-colors'}`}>
+                    account_balance
+                  </span>
+                  <h3 className={`font-headline-sm ${selectedFrameworkId === fw.id ? 'text-primary' : 'text-text-primary'}`}>{fw.name}</h3>
+                </div>
+                <span className="font-mono text-[11px] bg-surface-secondary text-text-tertiary px-2 py-0.5 rounded border border-border">v{fw.version}</span>
+              </div>
+              <p className="font-body-sm text-text-secondary line-clamp-2 mt-1">{fw.description}</p>
+            </div>
+          ))}
+        </div>
+      )}
 
       {selectedFrameworkId && (
-        <Card className="mt-8 border-t border-x-0 border-b-0 rounded-none md:border md:rounded-lg">
-          <CardHeader>
-            <CardTitle>Requirements</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="rounded-md border overflow-hidden">
-              <table className="w-full text-sm text-left">
-                <thead className="bg-slate-50/80 border-b">
+        <section className="bg-surface border border-border rounded-xl shadow-sm flex flex-col overflow-hidden min-h-[500px]">
+          {/* Toolbar */}
+          <div className="px-5 py-4 border-b border-border bg-surface-secondary/50 flex flex-col sm:flex-row sm:items-center gap-4 justify-between">
+            <div className="flex items-center gap-2">
+              <span className="material-symbols-outlined text-[20px] text-text-tertiary">list_alt</span>
+              <h3 className="font-headline-sm text-text-primary">Requirements</h3>
+            </div>
+            <div className="relative w-full max-w-sm">
+              <span className="material-symbols-outlined absolute left-3 top-2.5 text-[20px] text-text-tertiary">search</span>
+              <input 
+                placeholder="Search requirements..." 
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="w-full pl-10 pr-4 py-2 font-body-sm text-text-primary bg-surface border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+              />
+            </div>
+          </div>
+
+          {/* Data Table */}
+          <div className="overflow-x-auto flex-1">
+            <table className="w-full text-left border-collapse min-w-[800px]">
+              <thead className="bg-surface/50 border-b border-border">
+                <tr>
+                  <th className="px-3 py-3 w-10"></th>
+                  <th className="px-5 py-3 font-label-md text-text-secondary uppercase tracking-wider font-semibold w-24">ID</th>
+                  <th className="px-5 py-3 font-label-md text-text-secondary uppercase tracking-wider font-semibold">Title</th>
+                  <th className="px-5 py-3 font-label-md text-text-secondary uppercase tracking-wider font-semibold">Description</th>
+                  <th className="px-5 py-3 font-label-md text-text-secondary uppercase tracking-wider font-semibold text-center w-36">Status</th>
+                  <th className="px-5 py-3 font-label-md text-text-secondary uppercase tracking-wider font-semibold text-right w-32">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="font-body-sm text-text-primary divide-y divide-border/50">
+                {requirements.length === 0 ? (
                   <tr>
-                    <th className="px-4 py-3 w-10"></th>
-                    <th className="px-4 py-3 font-medium text-slate-600 w-24">ID</th>
-                    <th className="px-4 py-3 font-medium text-slate-600">Title</th>
-                    <th className="px-4 py-3 font-medium text-slate-600">Description</th>
-                    <th className="px-4 py-3 font-medium text-slate-600 text-center w-32">Status</th>
-                    <th className="px-4 py-3 font-medium text-slate-600 text-right w-32">Actions</th>
+                    <td colSpan={6} className="px-5 py-16 text-center">
+                      <div className="flex flex-col items-center justify-center space-y-4">
+                        <span className="material-symbols-outlined text-[48px] opacity-50 mb-2">rule</span>
+                        <h3 className="font-headline-sm text-text-primary">No requirements found</h3>
+                        <p className="font-body-sm text-text-secondary">This framework has no requirements configured.</p>
+                      </div>
+                    </td>
                   </tr>
-                </thead>
-                <tbody className="divide-y">
-                  {requirements.length === 0 ? (
-                    <tr>
-                      <td colSpan={6} className="px-4 py-8 text-center text-muted-foreground">
-                        No requirements found for this framework.
-                      </td>
-                    </tr>
-                  ) : (
-                    requirements.map((req) => (
-                      <React.Fragment key={req.id}>
-                        <tr className="hover:bg-slate-50/50 transition-colors">
-                          <td className="px-4 py-3">
-                            <button onClick={() => toggleExpand(req.id)} className="text-slate-400 hover:text-slate-700">
-                              {expandedReqs[req.id] ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
-                            </button>
-                          </td>
-                          <td className="px-4 py-3 font-medium">{req.identifier}</td>
-                          <td className="px-4 py-3 font-semibold">{req.title}</td>
-                          <td className="px-4 py-3 text-muted-foreground max-w-md truncate">{req.description}</td>
-                          <td className="px-4 py-3 flex justify-center">{getStatusIcon(req.status)}</td>
-                          <td className="px-4 py-3 text-right">
-                            <Button variant="ghost" size="sm" onClick={() => setMappingModalReq({ id: req.id, identifier: req.identifier })}>
-                              <LinkIcon className="h-4 w-4 mr-1" />
-                              Map
-                            </Button>
+                ) : filteredRequirements.length === 0 ? (
+                  <tr>
+                    <td colSpan={6} className="px-5 py-16 text-center">
+                      <p className="font-body-sm text-text-secondary">No requirements match your search.</p>
+                    </td>
+                  </tr>
+                ) : (
+                  filteredRequirements.map((req) => (
+                    <React.Fragment key={req.id}>
+                      <tr className="hover:bg-surface-secondary/30 transition-colors group">
+                        <td className="px-3 py-4 align-top text-center">
+                          <button onClick={() => toggleExpand(req.id)} className="text-text-tertiary hover:text-primary transition-colors p-1 rounded hover:bg-primary/10">
+                            <span className="material-symbols-outlined text-[20px]">
+                              {expandedReqs[req.id] ? 'keyboard_arrow_down' : 'keyboard_arrow_right'}
+                            </span>
+                          </button>
+                        </td>
+                        <td className="px-5 py-4 align-top font-mono text-[12px] font-semibold text-primary">{req.identifier}</td>
+                        <td className="px-5 py-4 align-top font-medium text-text-primary max-w-xs">{req.title}</td>
+                        <td className="px-5 py-4 align-top text-text-secondary max-w-md">{req.description}</td>
+                        <td className="px-5 py-4 align-top text-center">
+                          {getStatusBadge(req.status)}
+                        </td>
+                        <td className="px-5 py-4 align-top text-right">
+                          <Button variant="ghost" size="sm" onClick={() => setMappingModalReq({ id: req.id, identifier: req.identifier })} className="text-primary hover:bg-primary/10 hover:text-primary h-8 px-3 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity">
+                            <span className="material-symbols-outlined text-[16px] mr-1.5">link</span>
+                            Map
+                          </Button>
+                        </td>
+                      </tr>
+                      {expandedReqs[req.id] && (
+                        <tr className="bg-surface-secondary/30 border-b-2 border-border/50">
+                          <td colSpan={6} className="px-8 py-5">
+                            <div className="bg-surface border border-border rounded-lg shadow-sm overflow-hidden">
+                              <div className="px-4 py-3 border-b border-border bg-surface-secondary flex items-center gap-2">
+                                <span className="material-symbols-outlined text-[18px] text-text-tertiary">account_tree</span>
+                                <h4 className="font-label-md text-text-primary font-semibold">Mapped Controls & Policies</h4>
+                              </div>
+                              {(!reqMappings[req.id] || reqMappings[req.id].length === 0) ? (
+                                <div className="p-6 text-center text-text-tertiary">
+                                  <span className="material-symbols-outlined text-[24px] mb-2 opacity-50">link_off</span>
+                                  <p className="font-body-sm italic">No controls or policies are mapped to this requirement yet.</p>
+                                </div>
+                              ) : (
+                                <table className="w-full text-left">
+                                  <thead className="bg-surface-secondary/50 border-b border-border">
+                                    <tr>
+                                      <th className="px-4 py-2.5 font-label-sm text-text-tertiary uppercase tracking-wider">Type</th>
+                                      <th className="px-4 py-2.5 font-label-sm text-text-tertiary uppercase tracking-wider">Status</th>
+                                      <th className="px-4 py-2.5 font-label-sm text-text-tertiary uppercase tracking-wider text-right">Evidence</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody className="divide-y divide-border/50 font-body-sm text-text-primary">
+                                    {reqMappings[req.id].map(map => (
+                                      <tr key={map.id} className="hover:bg-surface-secondary/50 transition-colors">
+                                        <td className="px-4 py-3">
+                                          <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-primary/10 text-primary border border-primary/20 uppercase tracking-wider">
+                                            {map.policyId ? 'Policy' : 'Control'}
+                                          </span>
+                                        </td>
+                                        <td className="px-4 py-3">
+                                          <select 
+                                            className="bg-surface border border-border rounded-md text-[12px] font-medium py-1 px-2 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary cursor-pointer text-text-secondary"
+                                            value={map.status}
+                                            onChange={(e) => updateMappingStatus(map.id, req.id, e.target.value)}
+                                          >
+                                            <option value="NotAssessed">Not Assessed</option>
+                                            <option value="Compliant">Compliant</option>
+                                            <option value="NonCompliant">Non Compliant</option>
+                                            <option value="NotApplicable">Not Applicable</option>
+                                          </select>
+                                        </td>
+                                        <td className="px-4 py-3 text-right">
+                                          <div className="flex items-center justify-end gap-2">
+                                            <Button 
+                                              variant="outline" 
+                                              size="sm" 
+                                              onClick={() => setEvidenceModalMapping({ id: map.id, type: map.policyId ? 'Policy' : 'Control' })}
+                                              className="h-7 px-3 text-[11px] font-medium text-text-secondary border-border hover:bg-primary/10 hover:text-primary hover:border-primary/30"
+                                            >
+                                              <span className="material-symbols-outlined text-[14px] mr-1.5">attachment</span>
+                                              View Evidence
+                                            </Button>
+                                            <button 
+                                              onClick={async () => {
+                                                if(confirm('Are you sure you want to remove this mapping?')) {
+                                                  try {
+                                                    await apiFetch(`/api/v1/mappings/${map.id}`, { method: 'DELETE' });
+                                                    fetchMappings(req.id);
+                                                  } catch(e) { console.error(e); }
+                                                }
+                                              }}
+                                              className="p-1.5 text-text-tertiary hover:text-error hover:bg-error/10 rounded transition-colors"
+                                              title="Unlink"
+                                            >
+                                              <span className="material-symbols-outlined text-[16px]">link_off</span>
+                                            </button>
+                                          </div>
+                                        </td>
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </table>
+                              )}
+                            </div>
                           </td>
                         </tr>
-                        {expandedReqs[req.id] && (
-                          <tr className="bg-slate-50/50">
-                            <td colSpan={6} className="px-8 py-4">
-                              <div className="space-y-3">
-                                <h4 className="text-sm font-semibold flex items-center">
-                                  <LinkIcon className="h-4 w-4 mr-2 text-slate-400" />
-                                  Mapped Controls & Policies
-                                </h4>
-                                {(!reqMappings[req.id] || reqMappings[req.id].length === 0) ? (
-                                  <p className="text-sm text-slate-500 italic">No mappings exist yet.</p>
-                                ) : (
-                                  <div className="bg-white rounded border overflow-hidden">
-                                    <table className="w-full text-sm">
-                                      <thead className="bg-slate-100/50 border-b">
-                                        <tr>
-                                          <th className="px-3 py-2 font-medium text-slate-600 text-left">Type</th>
-                                          <th className="px-3 py-2 font-medium text-slate-600 text-left">Status</th>
-                                          <th className="px-3 py-2 font-medium text-slate-600 text-right">Preuves</th>
-                                        </tr>
-                                      </thead>
-                                      <tbody className="divide-y divide-slate-100">
-                                        {reqMappings[req.id].map(map => (
-                                          <tr key={map.id}>
-                                            <td className="px-3 py-2">
-                                              <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800">
-                                                {map.policyId ? 'Policy' : 'Control'}
-                                              </span>
-                                            </td>
-                                            <td className="px-3 py-2">
-                                              <select 
-                                                className="border-slate-200 rounded text-sm p-1"
-                                                value={map.status}
-                                                onChange={(e) => updateMappingStatus(map.id, req.id, e.target.value)}
-                                              >
-                                                <option value="NotAssessed">Not Assessed</option>
-                                                <option value="Compliant">Compliant</option>
-                                                <option value="NonCompliant">Non Compliant</option>
-                                                <option value="NotApplicable">Not Applicable</option>
-                                              </select>
-                                            </td>
-                                            <td className="px-3 py-2 text-right">
-                                              <div className="flex items-center justify-end gap-2">
-                                                <Button 
-                                                  variant="outline" 
-                                                  size="sm" 
-                                                  onClick={() => setEvidenceModalMapping({ id: map.id, type: map.policyId ? 'Policy' : 'Control' })}
-                                                >
-                                                  Voir les preuves
-                                                </Button>
-                                                <button 
-                                                  onClick={async () => {
-                                                    if(confirm('Supprimer ce lien ?')) {
-                                                      try {
-                                                        await apiFetch(`/api/v1/mappings/${map.id}`, { method: 'DELETE' });
-                                                        fetchMappings(req.id);
-                                                      } catch(e) { console.error(e); }
-                                                    }
-                                                  }}
-                                                  className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
-                                                  title="Délier"
-                                                >
-                                                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-                                                </button>
-                                              </div>
-                                            </td>
-                                          </tr>
-                                        ))}
-                                      </tbody>
-                                    </table>
-                                  </div>
-                                )}
-                              </div>
-                            </td>
-                          </tr>
-                        )}
-                      </React.Fragment>
-                    ))
-                  )}
-                </tbody>
-              </table>
-            </div>
-          </CardContent>
-        </Card>
+                      )}
+                    </React.Fragment>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+        </section>
       )}
 
       {isImportModalOpen && (
