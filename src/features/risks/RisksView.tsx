@@ -170,13 +170,13 @@ export const RisksView = () => {
             placeholder="Rechercher un risque…" 
             className="pl-9 bg-white" 
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e: any) => setSearch(e.target.value)}
           />
         </div>
         <select 
           className="px-3 py-2 border border-slate-200 rounded-md text-sm bg-white focus:ring-2 focus:ring-indigo-500 outline-none"
           value={categoryFilter}
-          onChange={(e) => setCategoryFilter(e.target.value)}
+          onChange={(e: any) => setCategoryFilter(e.target.value)}
         >
           <option value="all">Toutes catégories</option>
           {allCategories.map(c => <option key={c} value={c}>{c}</option>)}
@@ -184,7 +184,7 @@ export const RisksView = () => {
         <select 
           className="px-3 py-2 border border-slate-200 rounded-md text-sm bg-white focus:ring-2 focus:ring-indigo-500 outline-none"
           value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value)}
+          onChange={(e: any) => setStatusFilter(e.target.value)}
         >
           <option value="all">Tous statuts</option>
           <option value="Non évalué">Non évalués</option>
@@ -318,7 +318,7 @@ export const RisksView = () => {
                   <Input 
                     required 
                     value={newRisk.code}
-                    onChange={e => setNewRisk({...newRisk, code: e.target.value})}
+                    onChange={(e: any) => setNewRisk({...newRisk, code: e.target.value})}
                     placeholder="e.g. RSK-001"
                   />
                 </div>
@@ -327,7 +327,7 @@ export const RisksView = () => {
                   <Input 
                     required 
                     value={newRisk.category}
-                    onChange={e => setNewRisk({...newRisk, category: e.target.value})}
+                    onChange={(e: any) => setNewRisk({...newRisk, category: e.target.value})}
                     placeholder="e.g. Cybersécurité"
                   />
                 </div>
@@ -338,7 +338,7 @@ export const RisksView = () => {
                 <Input 
                   required 
                   value={newRisk.title}
-                  onChange={e => setNewRisk({...newRisk, title: e.target.value})}
+                  onChange={(e: any) => setNewRisk({...newRisk, title: e.target.value})}
                   placeholder="e.g., Unpatched legacy servers"
                 />
               </div>

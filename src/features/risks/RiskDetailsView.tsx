@@ -210,7 +210,7 @@ export const RiskDetailsView = () => {
                   <select 
                     className="w-full max-w-xs px-2 py-1.5 text-sm border border-slate-200 rounded focus:outline-none focus:ring-1 focus:ring-indigo-500"
                     value={selectedAssetId}
-                    onChange={(e) => handleLinkAsset(e.target.value)}
+                    onChange={(e: any) => handleLinkAsset(e.target.value)}
                   >
                     <option value="">-- No asset linked --</option>
                     {assets.map(a => (
@@ -381,7 +381,7 @@ export const RiskDetailsView = () => {
                 <Input 
                   type="date"
                   value={newTreatment.dueDate}
-                  onChange={e => setNewTreatment({...newTreatment, dueDate: e.target.value})}
+                  onChange={(e: any) => setNewTreatment({...newTreatment, dueDate: e.target.value})}
                 />
               </div>
               <div className="flex justify-end gap-3 pt-4">

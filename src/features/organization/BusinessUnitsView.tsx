@@ -39,7 +39,7 @@ const BusinessUnitNode = ({ unit, depth = 0, onAdd }: { unit: BusinessUnit; dept
           {unit.children.length} sub-units
         </Badge>
         <div className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1">
-          <Button variant="ghost" size="sm" className="h-7 px-2 text-xs" onClick={(e) => { e.stopPropagation(); onAdd(unit.id); }}>
+          <Button variant="ghost" size="sm" className="h-7 px-2 text-xs" onClick={(e: any) => { e.stopPropagation(); onAdd(unit.id); }}>
             <Plus className="h-3 w-3 mr-1" /> Add
           </Button>
         </div>

@@ -1,34 +1,44 @@
 import React from 'react';
-import { Building2, ChevronRight, Search, Bell, Settings2 } from 'lucide-react';
-import { Input } from '../ui/Input';
-import { Button } from '../ui/Button';
+import { useNavigate } from 'react-router';
+import { useAuth } from '../../features/auth/AuthContext';
 
 export const Header = () => {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
   return (
-    <header className="h-14 border-b bg-card flex items-center justify-between px-4 lg:px-6 shrink-0 shadow-sm z-10">
-      <div className="flex items-center gap-4 flex-1">
-        <div className="hidden md:flex items-center gap-2 text-sm font-medium text-muted-foreground border-r pr-4 h-6">
-          <Building2 className="h-4 w-4" />
-          Global HQ
-          <ChevronRight className="h-4 w-4" />
-          <span className="text-foreground">Information Security</span>
-        </div>
-        <div className="relative max-w-md flex-1">
-          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-          <Input placeholder="Search globally..." className="pl-9 bg-muted/50 border-transparent focus-visible:bg-background focus-visible:border-input" />
-          <div className="absolute right-2.5 top-2.5 flex gap-1">
-            <kbd className="hidden sm:inline-flex h-4 items-center gap-1 rounded border bg-card px-1.5 font-mono text-[10px] font-medium text-muted-foreground shadow-sm">⌘K</kbd>
-          </div>
-        </div>
+    <header className="flex justify-between items-center w-full px-margin-desktop h-16 z-40 bg-surface border-b border-border sticky top-0 shrink-0">
+      <div className="flex items-center gap-8">
+        <span className="font-headline-sm text-headline-sm font-semibold text-text-primary">Global HQ</span>
+        <nav className="hidden md:flex gap-6">
+          <button className="font-body-md text-body-md text-text-secondary hover:text-primary transition-colors">Workspaces</button>
+          <button className="font-body-md text-body-md text-text-secondary hover:text-primary transition-colors">Admin Console</button>
+        </nav>
       </div>
-      <div className="flex items-center gap-3 ml-4">
-        <Button variant="ghost" size="icon" className="relative text-muted-foreground hover:text-foreground">
-          <Bell className="h-4 w-4" />
-          <span className="absolute top-2 right-2 w-2 h-2 bg-destructive rounded-full border-2 border-card" />
-        </Button>
-        <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground">
-          <Settings2 className="h-4 w-4" />
-        </Button>
+      
+      <div className="flex items-center gap-4">
+        <button className="hidden md:flex items-center justify-center w-8 h-8 rounded-full text-text-secondary hover:bg-surface-container-low transition-colors">
+          <span className="material-symbols-outlined text-[20px]">history</span>
+        </button>
+        <button className="flex items-center justify-center w-8 h-8 rounded-full text-text-secondary hover:bg-surface-container-low transition-colors">
+          <span className="material-symbols-outlined text-[20px]">notifications</span>
+        </button>
+        <button 
+          onClick={() => navigate('/ai')}
+          className="hidden md:flex items-center justify-center w-8 h-8 rounded-full text-text-secondary hover:bg-surface-container-low transition-colors"
+        >
+          <span className="material-symbols-outlined text-[20px]">smart_toy</span>
+        </button>
+        <button 
+          onClick={() => navigate('/audits')}
+          className="font-label-md text-label-md text-primary border border-border px-3 py-1.5 rounded hover:bg-surface-container-low transition-colors"
+        >
+          New Assessment
+        </button>
+        
+        <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-xs font-bold text-on-primary border border-border shrink-0">
+          {user?.firstName?.charAt(0)}{user?.lastName?.charAt(0)}
+        </div>
       </div>
     </header>
   );

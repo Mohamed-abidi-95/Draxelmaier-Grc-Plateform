@@ -1,5 +1,5 @@
-@import "tailwindcss";
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import "tailwindcss";
 
 @layer base {
   :root {
@@ -92,42 +92,87 @@
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-input-background: var(--input-background);
-  --color-switch-background: var(--switch-background);
-  --color-ring: var(--ring);
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-ring: var(--sidebar-ring);
+  --color-background: #f9f9ff;
+  --color-surface-container: #e7eeff;
+  --color-surface: #FFFFFF;
+  --color-surface-secondary: #F8FAFC;
+  --color-text-primary: #1E293B;
+  --color-text-secondary: #475569;
+  --color-text-tertiary: #94A3B8;
+  --color-primary: #3525cd;
+  --color-primary-container: #4f46e5;
+  --color-on-primary: #ffffff;
+  --color-primary-fixed: #e2dfff;
+  --color-primary-fixed-dim: #c3c0ff;
+  --color-secondary: #006a61;
+  --color-success: #059669;
+  --color-warning: #D97706;
+  --color-error: #DC2626;
+  --color-error-container: #ffdad6;
+  --color-border: #E2E8F0;
+  --color-surface-container-low: #f0f3ff;
+  --color-surface-variant: #d8e3fb;
+  --color-app-bg: #F4F7FA;
+  
+  --radius: 0.125rem;
+  --radius-lg: 0.25rem;
+  --radius-xl: 0.5rem;
+  --radius-full: 0.75rem;
+
+  --spacing-sidebar-width: 240px;
+  --spacing-density-comfortable: 16px;
+  --spacing-density-tight: 8px;
+  --spacing-gutter: 16px;
+  --spacing-margin-desktop: 24px;
+  --spacing-margin-mobile: 16px;
+
+  --font-headline-lg: 30px;
+  --font-headline-md: 20px;
+  --font-headline-sm: 16px;
+  --font-body-lg: 16px;
+  --font-body-md: 14px;
+  --font-body-sm: 13px;
+  --font-label-md: 12px;
+  --font-label-sm: 11px;
+}
+
+@utility text-headline-lg {
+  font-size: 30px;
+  line-height: 38px;
+  font-weight: 600;
+}
+@utility text-headline-md {
+  font-size: 20px;
+  line-height: 28px;
+  font-weight: 600;
+}
+@utility text-headline-sm {
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 600;
+}
+@utility text-body-lg {
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 400;
+}
+@utility text-body-md {
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 400;
+}
+@utility text-body-sm {
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 400;
+}
+@utility text-label-md {
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 600;
+}
+@utility text-label-sm {
+  font-size: 11px;
+  line-height: 14px;
+  font-weight: 500;
 }

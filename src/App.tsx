@@ -14,6 +14,7 @@ import { ControlsView } from './features/controls/ControlsView';
 import { AssetsView } from './features/assets/AssetsView';
 import { BusinessUnitsView } from './features/organization/BusinessUnitsView';
 import { UsersView } from './features/admin/UsersView';
+import { AiAssistantView } from './features/ai/AiAssistantView';
 
 import { LoginView } from './features/auth/LoginView';
 import { AuthProvider, useAuth } from './features/auth/AuthContext';
@@ -67,6 +68,7 @@ export default function App() {
           <Route path="audits" element={<AuditsView />} />
           <Route path="activity-logs" element={<ActivityLogsView />} />
           <Route path="users" element={<UsersView />} />
+          <Route path="ai" element={<AiAssistantView />} />
           <Route path="incidents" element={<PlaceholderView title="Incidents" />} />
           <Route path="reports" element={<PlaceholderView title="Reports" />} />
 

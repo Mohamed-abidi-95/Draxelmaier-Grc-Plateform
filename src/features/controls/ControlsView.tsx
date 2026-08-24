@@ -154,7 +154,7 @@ export const ControlsView = () => {
                 <Input 
                   required 
                   value={newControl.name}
-                  onChange={e => setNewControl({...newControl, name: e.target.value})}
+                  onChange={(e: any) => setNewControl({...newControl, name: e.target.value})}
                   placeholder="e.g., Access Review Policy"
                   className="w-full"
                 />
@@ -165,7 +165,7 @@ export const ControlsView = () => {
                   required
                   className="w-full h-24 px-3 py-2 text-sm border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 border-slate-200 resize-none"
                   value={newControl.description}
-                  onChange={e => setNewControl({...newControl, description: e.target.value})}
+                  onChange={(e: any) => setNewControl({...newControl, description: e.target.value})}
                   placeholder="Describe the control and its purpose..."
                 />
               </div>

@@ -90,7 +90,7 @@ export const AssetsView = () => {
             placeholder="Search assets..." 
             className="pl-9 bg-white" 
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e: any) => setSearch(e.target.value)}
           />
         </div>
       </div>
@@ -162,7 +162,7 @@ export const AssetsView = () => {
                 <Input 
                   required 
                   value={newAsset.name}
-                  onChange={e => setNewAsset({...newAsset, name: e.target.value})}
+                  onChange={(e: any) => setNewAsset({...newAsset, name: e.target.value})}
                   placeholder="e.g. Core Database Server"
                 />
               </div>
@@ -172,7 +172,7 @@ export const AssetsView = () => {
                   <select 
                     className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-indigo-500 border-slate-200 text-sm"
                     value={newAsset.type}
-                    onChange={e => setNewAsset({...newAsset, type: e.target.value})}
+                    onChange={(e: any) => setNewAsset({...newAsset, type: e.target.value})}
                   >
                     <option value="Server">Server</option>
                     <option value="Application">Application</option>
