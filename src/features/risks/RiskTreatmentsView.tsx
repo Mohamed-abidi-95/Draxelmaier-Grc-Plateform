@@ -1,14 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { ShieldPlus, Search, ArrowUpRight, Calendar } from 'lucide-react';
-import { Card } from '../../components/ui/Card';
-import { Input } from '../../components/ui/Input';
-import { Badge } from '../../components/ui/Badge';
+import React, { useState, useEffect, useMemo } from 'react';
 import { apiFetch } from '../../lib/apiClient';
 import { Link } from 'react-router';
 
 export const RiskTreatmentsView = () => {
   const [treatments, setTreatments] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [search, setSearch] = useState('');
 
   useEffect(() => {
     loadTreatments();
@@ -26,72 +23,122 @@ export const RiskTreatmentsView = () => {
     }
   };
 
+  const filteredTreatments = useMemo(() => {
+    return treatments.filter(t => 
+      t.riskTitle?.toLowerCase().includes(search.toLowerCase()) || 
+      t.description?.toLowerCase().includes(search.toLowerCase())
+    );
+  }, [treatments, search]);
+
+  const getTreatmentColor = (type: string) => {
+    switch (type) {
+      case 'Mitigate': return "bg-primary/10 text-primary border-primary/20";
+      case 'Accept': return "bg-success/10 text-success border-success/20";
+      case 'Transfer': return "bg-warning/10 text-warning border-warning/20";
+      case 'Avoid': return "bg-error/10 text-error border-error/20";
+      default: return "bg-surface-container-low text-text-secondary border-border";
+    }
+  };
+
+  const getTreatmentIcon = (type: string) => {
+    switch (type) {
+      case 'Mitigate': return "shield";
+      case 'Accept': return "thumb_up";
+      case 'Transfer': return "move_up";
+      case 'Avoid': return "block";
+      default: return "healing";
+    }
+  };
+
   return (
-    <div className="max-w-6xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <div>
-        <h2 className="text-2xl font-bold tracking-tight text-slate-900">Risk Treatments</h2>
-        <p className="text-slate-500 text-sm mt-1">Global view of all risk treatment plans.</p>
+    <div className="flex-1 flex flex-col gap-6 max-w-[1440px] mx-auto w-full animate-fade-in">
+      
+      {/* Header Section */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-2">
+        <div>
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-primary/10 rounded-lg">
+              <span className="material-symbols-outlined text-primary text-[24px]">healing</span>
+            </div>
+            <h1 className="font-headline-lg text-text-primary tracking-tight">Risk Treatments</h1>
+          </div>
+          <p className="font-body-md text-text-secondary mt-2">Global view of all risk treatment plans and mitigation strategies.</p>
+        </div>
       </div>
 
-      <Card className="border-slate-200 shadow-sm overflow-hidden">
-        <div className="p-4 border-b border-slate-200 bg-slate-50 flex items-center gap-4">
+      <section className="bg-surface border border-border rounded-xl shadow-sm flex flex-col overflow-hidden min-h-[500px]">
+        {/* Toolbar */}
+        <div className="px-5 py-4 border-b border-border bg-surface-secondary/50 flex flex-col sm:flex-row sm:items-center gap-4 justify-between">
           <div className="relative flex-1 max-w-md">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
-            <Input placeholder="Search treatments..." className="pl-9 bg-white border-slate-200" />
+            <span className="material-symbols-outlined absolute left-3 top-2.5 text-[20px] text-text-tertiary">search</span>
+            <input 
+              placeholder="Search treatments by risk or description..." 
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full pl-10 pr-4 py-2 font-body-sm text-text-primary bg-surface border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+            />
           </div>
         </div>
 
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm text-left">
-            <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 uppercase tracking-wider text-[11px] font-semibold">
+        {/* Data Table */}
+        <div className="overflow-x-auto flex-1">
+          <table className="w-full text-left border-collapse min-w-[800px]">
+            <thead className="bg-surface/50 border-b border-border">
               <tr>
-                <th className="px-6 py-4">Related Risk</th>
-                <th className="px-6 py-4">Type</th>
-                <th className="px-6 py-4">Description</th>
-                <th className="px-6 py-4">Due Date</th>
-                <th className="px-6 py-4 text-right">Actions</th>
+                <th className="px-5 py-3 font-label-md text-text-secondary uppercase tracking-wider font-semibold">Related Risk</th>
+                <th className="px-5 py-3 font-label-md text-text-secondary uppercase tracking-wider font-semibold">Treatment Strategy</th>
+                <th className="px-5 py-3 font-label-md text-text-secondary uppercase tracking-wider font-semibold">Description</th>
+                <th className="px-5 py-3 font-label-md text-text-secondary uppercase tracking-wider font-semibold">Due Date</th>
+                <th className="px-5 py-3 font-label-md text-text-secondary uppercase tracking-wider font-semibold text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="font-body-sm text-text-primary divide-y divide-border/50">
               {isLoading ? (
                 <tr>
-                  <td colSpan={5} className="px-6 py-8 text-center text-slate-500">
-                    Loading treatments...
+                  <td colSpan={5} className="px-5 py-16 text-center">
+                    <div className="flex flex-col items-center justify-center space-y-4">
+                      <div className="w-8 h-8 border-4 border-surface-container border-t-primary rounded-full animate-spin"></div>
+                      <p className="font-body-sm text-text-secondary">Loading treatments...</p>
+                    </div>
                   </td>
                 </tr>
-              ) : treatments.length === 0 ? (
+              ) : filteredTreatments.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="px-6 py-12 text-center text-slate-500">
-                    <ShieldPlus className="h-12 w-12 text-slate-300 mx-auto mb-3" />
-                    <p className="text-base font-medium text-slate-900">No treatments planned</p>
+                  <td colSpan={5} className="px-5 py-16 text-center">
+                    <div className="flex flex-col items-center justify-center gap-2 text-text-tertiary">
+                      <span className="material-symbols-outlined text-[48px] opacity-50 mb-2">medical_services</span>
+                      <h3 className="font-headline-sm text-text-primary">No treatments found</h3>
+                      <p className="font-body-sm text-text-secondary">Treatment plans will appear here once created.</p>
+                    </div>
                   </td>
                 </tr>
               ) : (
-                treatments.map(t => (
-                  <tr key={t.id} className="hover:bg-slate-50/50 transition-colors">
-                    <td className="px-6 py-4">
-                      <Link to={`/risks/${t.riskId}`} className="font-medium text-slate-900 hover:text-indigo-600 transition-colors flex items-center gap-1.5">
+                filteredTreatments.map(t => (
+                  <tr key={t.id} className="hover:bg-surface-secondary/50 transition-colors group">
+                    <td className="px-5 py-4">
+                      <Link to={`/risks/${t.riskId}`} className="font-medium text-text-primary hover:text-primary transition-colors flex items-center gap-2">
                         {t.riskTitle}
-                        <ArrowUpRight className="h-3 w-3 opacity-50" />
+                        <span className="material-symbols-outlined text-[14px] opacity-0 group-hover:opacity-100 transition-opacity">open_in_new</span>
                       </Link>
                     </td>
-                    <td className="px-6 py-4">
-                      <Badge variant="outline" className="bg-slate-100 text-slate-700">
+                    <td className="px-5 py-4">
+                      <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold border ${getTreatmentColor(t.type)}`}>
+                        <span className="material-symbols-outlined text-[14px] mr-1.5">{getTreatmentIcon(t.type)}</span>
                         {t.type}
-                      </Badge>
+                      </span>
                     </td>
-                    <td className="px-6 py-4 text-slate-500 max-w-xs truncate">
+                    <td className="px-5 py-4 text-text-secondary max-w-sm truncate" title={t.description}>
                       {t.description}
                     </td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-1.5 text-slate-600">
-                        <Calendar className="h-4 w-4 text-slate-400" />
-                        {t.dueDate ? new Date(t.dueDate).toLocaleDateString() : 'N/A'}
+                    <td className="px-5 py-4 text-text-tertiary">
+                      <div className="flex items-center gap-1.5">
+                        <span className="material-symbols-outlined text-[16px]">calendar_today</span>
+                        {t.dueDate ? new Date(t.dueDate).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' }) : 'No date set'}
                       </div>
                     </td>
-                    <td className="px-6 py-4 text-right">
-                      <Link to={`/risks/${t.riskId}`} className="text-indigo-600 hover:text-indigo-800 font-medium text-xs">
-                        View Risk
+                    <td className="px-5 py-4 text-right">
+                      <Link to={`/risks/${t.riskId}`} className="text-primary hover:text-primary/80 font-medium text-xs inline-flex items-center gap-1 bg-primary/10 px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity">
+                        View Risk <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
                       </Link>
                     </td>
                   </tr>
@@ -100,7 +147,7 @@ export const RiskTreatmentsView = () => {
             </tbody>
           </table>
         </div>
-      </Card>
+      </section>
     </div>
   );
 };
