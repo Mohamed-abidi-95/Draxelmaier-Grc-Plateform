@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Search, Settings2, ShieldCheck, FileText, ArrowUpRight } from 'lucide-react';
-import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
-import { Input } from '../../components/ui/Input';
 import { apiFetch } from '../../lib/apiClient';
 import { useAuth } from '../auth/AuthContext';
 
@@ -19,6 +16,7 @@ export const ControlsView = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedControl, setSelectedControl] = useState<Control | null>(null);
   const [newControl, setNewControl] = useState({ name: '', description: '' });
+  const [searchTerm, setSearchTerm] = useState('');
   const { user } = useAuth();
 
   const loadControls = async () => {
@@ -60,76 +58,98 @@ export const ControlsView = () => {
     }
   };
 
+  const filteredControls = controls.filter(c => 
+    c.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+    c.description.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
-    <div className="max-w-6xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div className="flex-1 flex flex-col gap-6 max-w-[1440px] mx-auto w-full animate-fade-in">
+      {/* Header Section */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-2">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight text-slate-900">Internal Controls</h2>
-          <p className="text-slate-500 text-sm mt-1">Manage and define mitigating controls for your organization.</p>
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-primary/10 rounded-lg">
+              <span className="material-symbols-outlined text-primary text-[24px]">verified_user</span>
+            </div>
+            <h1 className="font-headline-lg text-text-primary tracking-tight">Internal Controls</h1>
+          </div>
+          <p className="font-body-md text-text-secondary mt-2">Manage and define mitigating controls for your organization.</p>
         </div>
-        <Button onClick={() => setShowModal(true)} className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white">
-          <Plus className="h-4 w-4" />
+        <Button onClick={() => setShowModal(true)} className="bg-primary hover:bg-primary/90 text-white shadow-sm px-4 py-2 flex items-center gap-2 rounded-lg transition-all hover:shadow-md">
+          <span className="material-symbols-outlined text-[18px]">add</span>
           Create Control
         </Button>
       </div>
 
-      <Card className="border-slate-200 shadow-sm overflow-hidden">
-        <div className="p-4 border-b border-slate-200 bg-slate-50 flex items-center gap-4">
+      <section className="bg-surface border border-border rounded-xl shadow-sm flex flex-col overflow-hidden min-h-[500px]">
+        {/* Toolbar */}
+        <div className="px-5 py-4 border-b border-border bg-surface-secondary/50 flex flex-col sm:flex-row sm:items-center gap-4 justify-between">
           <div className="relative flex-1 max-w-md">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
-            <Input placeholder="Search controls..." className="pl-9 bg-white border-slate-200" />
+            <span className="material-symbols-outlined absolute left-3 top-2.5 text-[20px] text-text-tertiary">search</span>
+            <input 
+              placeholder="Search controls..." 
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full pl-10 pr-4 py-2 font-body-sm text-text-primary bg-surface border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+            />
           </div>
         </div>
 
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm text-left">
-            <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 uppercase tracking-wider text-[11px] font-semibold">
+        {/* Data Table */}
+        <div className="overflow-x-auto flex-1">
+          <table className="w-full text-left border-collapse min-w-[800px]">
+            <thead className="bg-surface/50 border-b border-border">
               <tr>
-                <th className="px-6 py-4">Control Name</th>
-                <th className="px-6 py-4">Description</th>
-                <th className="px-6 py-4">Created Date</th>
-                <th className="px-6 py-4 text-right">Actions</th>
+                <th className="px-5 py-3 font-label-md text-text-secondary uppercase tracking-wider font-semibold">Control Name</th>
+                <th className="px-5 py-3 font-label-md text-text-secondary uppercase tracking-wider font-semibold">Description</th>
+                <th className="px-5 py-3 font-label-md text-text-secondary uppercase tracking-wider font-semibold w-40">Created Date</th>
+                <th className="px-5 py-3 text-right w-32">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="font-body-sm text-text-primary divide-y divide-border/50">
               {isLoading ? (
                 <tr>
-                  <td colSpan={4} className="px-6 py-8 text-center text-slate-500">
-                    <div className="flex justify-center mb-2">
-                      <div className="w-6 h-6 border-2 border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div>
+                  <td colSpan={4} className="px-5 py-16 text-center">
+                    <div className="flex flex-col items-center justify-center space-y-4">
+                      <div className="w-8 h-8 border-4 border-surface-container border-t-primary rounded-full animate-spin"></div>
+                      <p className="font-body-sm text-text-secondary">Loading controls...</p>
                     </div>
-                    Loading controls...
                   </td>
                 </tr>
-              ) : controls.length === 0 ? (
+              ) : filteredControls.length === 0 ? (
                 <tr>
-                  <td colSpan={4} className="px-6 py-12 text-center text-slate-500">
-                    <Settings2 className="h-12 w-12 text-slate-300 mx-auto mb-3" />
-                    <p className="text-base font-medium text-slate-900">No controls found</p>
-                    <p className="text-sm mt-1">Get started by creating your first internal control.</p>
+                  <td colSpan={4} className="px-5 py-16 text-center">
+                    <div className="flex flex-col items-center justify-center gap-2 text-text-tertiary">
+                      <span className="material-symbols-outlined text-[48px] opacity-50 mb-2">policy</span>
+                      <h3 className="font-headline-sm text-text-primary">No controls found</h3>
+                      <p className="font-body-sm text-text-secondary">Get started by creating your first internal control.</p>
+                    </div>
                   </td>
                 </tr>
               ) : (
-                controls.map(control => (
-                  <tr key={control.id} className="hover:bg-slate-50/50 transition-colors group">
-                    <td className="px-6 py-4 font-medium text-slate-900">
-                      <div className="flex items-center gap-2">
-                        <ShieldCheck className="h-4 w-4 text-emerald-500" />
+                filteredControls.map(control => (
+                  <tr key={control.id} className="hover:bg-surface-secondary/50 transition-colors group cursor-pointer" onClick={() => setSelectedControl(control)}>
+                    <td className="px-5 py-4 font-medium text-text-primary">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded bg-success/10 flex items-center justify-center text-success">
+                          <span className="material-symbols-outlined text-[18px]">verified_user</span>
+                        </div>
                         {control.name}
                       </div>
                     </td>
-                    <td className="px-6 py-4 text-slate-600 max-w-md truncate">
-                      {control.description}
+                    <td className="px-5 py-4 text-text-secondary max-w-md">
+                      <div className="truncate" title={control.description}>{control.description}</div>
                     </td>
-                    <td className="px-6 py-4 text-slate-500">
+                    <td className="px-5 py-4 text-text-secondary">
                       {new Date(control.createdAt).toLocaleDateString()}
                     </td>
-                    <td className="px-6 py-4 text-right">
+                    <td className="px-5 py-4 text-right">
                       <button 
-                        onClick={() => setSelectedControl(control)}
-                        className="text-indigo-600 hover:text-indigo-800 font-medium text-xs opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-end w-full gap-1"
+                        onClick={(e) => { e.stopPropagation(); setSelectedControl(control); }}
+                        className="text-primary hover:text-primary/80 font-medium text-xs opacity-0 group-hover:opacity-100 transition-opacity inline-flex items-center gap-1 bg-primary/10 px-3 py-1.5 rounded-lg"
                       >
-                        View Details <ArrowUpRight className="h-3 w-3" />
+                        Details <span className="material-symbols-outlined text-[14px]">open_in_new</span>
                       </button>
                     </td>
                   </tr>
@@ -138,43 +158,56 @@ export const ControlsView = () => {
             </tbody>
           </table>
         </div>
-      </Card>
+      </section>
 
       {/* Create Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
-          <div className="bg-white rounded-xl shadow-xl w-full max-w-md overflow-hidden">
-            <div className="px-6 py-4 border-b border-slate-100 bg-slate-50/50">
-              <h3 className="text-lg font-semibold text-slate-900">Create New Control</h3>
+        <div className="fixed inset-0 bg-[#0F172A]/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
+          <div className="bg-surface rounded-2xl shadow-xl w-full max-w-md overflow-hidden border border-border scale-in-center">
+            
+            <div className="px-6 py-5 border-b border-border bg-surface-secondary/50 flex justify-between items-center">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
+                  <span className="material-symbols-outlined text-primary text-[18px]">add_moderator</span>
+                </div>
+                <h3 className="font-headline-sm text-text-primary">Create New Control</h3>
+              </div>
+              <button 
+                onClick={() => setShowModal(false)}
+                className="text-text-tertiary hover:text-text-primary transition-colors p-1 rounded-md hover:bg-surface-secondary"
+              >
+                <span className="material-symbols-outlined text-[20px]">close</span>
+              </button>
             </div>
             
-            <form onSubmit={handleCreateControl} className="p-6 space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Control Name</label>
-                <Input 
+            <form onSubmit={handleCreateControl} className="p-6 space-y-5">
+              <div className="space-y-1.5">
+                <label className="block font-label-md text-text-secondary uppercase tracking-wider">Control Name</label>
+                <input 
                   required 
+                  autoFocus
                   value={newControl.name}
                   onChange={(e: any) => setNewControl({...newControl, name: e.target.value})}
                   placeholder="e.g., Access Review Policy"
-                  className="w-full"
+                  className="w-full px-4 py-2.5 font-body-sm text-text-primary bg-surface-secondary border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all placeholder-text-tertiary"
                 />
               </div>
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Description</label>
+              <div className="space-y-1.5">
+                <label className="block font-label-md text-text-secondary uppercase tracking-wider">Description</label>
                 <textarea 
                   required
-                  className="w-full h-24 px-3 py-2 text-sm border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 border-slate-200 resize-none"
+                  className="w-full h-24 px-4 py-2.5 font-body-sm text-text-primary bg-surface-secondary border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all placeholder-text-tertiary resize-none"
                   value={newControl.description}
                   onChange={(e: any) => setNewControl({...newControl, description: e.target.value})}
                   placeholder="Describe the control and its purpose..."
                 />
               </div>
 
-              <div className="flex justify-end gap-3 pt-4 border-t border-slate-100">
-                <Button type="button" variant="outline" onClick={() => setShowModal(false)}>
+              <div className="flex justify-end gap-3 pt-6 border-t border-border mt-2">
+                <Button type="button" variant="outline" className="px-5 font-medium border-border text-text-secondary hover:bg-surface-secondary hover:text-text-primary" onClick={() => setShowModal(false)}>
                   Cancel
                 </Button>
-                <Button type="submit" className="bg-indigo-600 hover:bg-indigo-700 text-white">
+                <Button type="submit" className="px-5 bg-primary hover:bg-primary/90 text-white font-medium flex items-center gap-2">
                   Save Control
                 </Button>
               </div>
@@ -185,38 +218,50 @@ export const ControlsView = () => {
 
       {/* View Details Modal */}
       {selectedControl && (
-        <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
-          <div className="bg-white rounded-xl shadow-xl w-full max-w-md overflow-hidden relative">
-            <div className="px-6 py-4 border-b border-slate-100 bg-slate-50/50">
-              <h3 className="text-lg font-semibold text-slate-900 flex items-center gap-2">
-                <ShieldCheck className="h-5 w-5 text-emerald-500" />
-                Control Details
-              </h3>
+        <div className="fixed inset-0 bg-[#0F172A]/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
+          <div className="bg-surface rounded-2xl shadow-xl w-full max-w-md overflow-hidden border border-border scale-in-center relative">
+            <div className="px-6 py-5 border-b border-border bg-surface-secondary/50 flex justify-between items-center">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 bg-success/10 rounded-lg flex items-center justify-center">
+                  <span className="material-symbols-outlined text-success text-[18px]">verified_user</span>
+                </div>
+                <h3 className="font-headline-sm text-text-primary">Control Details</h3>
+              </div>
+              <button 
+                onClick={() => setSelectedControl(null)}
+                className="text-text-tertiary hover:text-text-primary transition-colors p-1 rounded-md hover:bg-surface-secondary"
+              >
+                <span className="material-symbols-outlined text-[20px]">close</span>
+              </button>
             </div>
-            <div className="p-6 space-y-4">
+            
+            <div className="p-6 space-y-5">
               <div>
-                <h4 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Name</h4>
-                <p className="text-sm font-medium text-slate-900">{selectedControl.name}</p>
+                <h4 className="font-label-md text-text-tertiary uppercase tracking-wider mb-1.5">Name</h4>
+                <p className="font-body-md text-text-primary font-medium">{selectedControl.name}</p>
               </div>
               <div>
-                <h4 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Description</h4>
-                <div className="text-sm text-slate-700 bg-slate-50 p-3 rounded-lg border border-slate-100 whitespace-pre-wrap">
+                <h4 className="font-label-md text-text-tertiary uppercase tracking-wider mb-1.5">Description</h4>
+                <div className="font-body-sm text-text-secondary bg-surface-secondary p-4 rounded-xl border border-border whitespace-pre-wrap leading-relaxed">
                   {selectedControl.description}
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-6 p-4 bg-surface-container-low rounded-xl border border-border">
                 <div>
-                  <h4 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">ID</h4>
-                  <p className="text-xs font-mono text-slate-600 break-all" title={selectedControl.id}>{selectedControl.id}</p>
+                  <h4 className="font-label-sm text-text-tertiary uppercase tracking-wider mb-1">ID</h4>
+                  <p className="font-mono text-xs text-text-secondary break-all">{selectedControl.id.split('-')[0]}...</p>
                 </div>
                 <div>
-                  <h4 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Created At</h4>
-                  <p className="text-xs text-slate-600">{new Date(selectedControl.createdAt).toLocaleDateString()}</p>
+                  <h4 className="font-label-sm text-text-tertiary uppercase tracking-wider mb-1">Created At</h4>
+                  <p className="font-body-sm font-medium text-text-secondary">{new Date(selectedControl.createdAt).toLocaleDateString()}</p>
                 </div>
               </div>
             </div>
-            <div className="px-6 py-4 border-t border-slate-100 bg-slate-50/50 flex justify-end">
-              <Button onClick={() => setSelectedControl(null)}>Close</Button>
+            
+            <div className="px-6 py-4 border-t border-border bg-surface-secondary/50 flex justify-end">
+              <Button onClick={() => setSelectedControl(null)} className="px-5 font-medium border-border text-text-secondary hover:bg-surface hover:text-text-primary">
+                Close
+              </Button>
             </div>
           </div>
         </div>
