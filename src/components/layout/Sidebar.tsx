@@ -15,7 +15,7 @@ const SIDEBAR_ITEMS = [
   { id: 'compliance', path: '/compliance', label: 'Frameworks', icon: 'verified_user', allowedRoles: ['Administrator', 'ComplianceOfficer', 'CISO', 'Auditor'] },
   { id: 'audits', path: '/audits', label: 'Audits', icon: 'gavel', allowedRoles: ['Administrator', 'ComplianceOfficer', 'CISO', 'Auditor'] },
   { id: 'activity-logs', path: '/activity-logs', label: 'Activity Logs', icon: 'history', allowedRoles: ['Administrator', 'ComplianceOfficer', 'CISO'] },
-  { id: 'ai', path: '/ai', label: 'Intelligence', icon: 'psychology', allowedRoles: ['Administrator', 'ComplianceOfficer', 'CISO'] },
+  { id: 'ai', path: '/intelligence', label: 'Intelligence', icon: 'psychology', allowedRoles: ['Administrator', 'ComplianceOfficer', 'CISO'] },
 ];
 
 export const Sidebar = () => {
