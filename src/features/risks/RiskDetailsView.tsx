@@ -26,10 +26,10 @@ export const RiskDetailsView = () => {
   const [selectedControlId, setSelectedControlId] = useState<string>('');
 
   useEffect(() => {
-    if (id) {
+    if (id && user) {
       loadData();
     }
-  }, [id]);
+  }, [id, user]);
 
   const loadData = async () => {
     try {
@@ -39,7 +39,7 @@ export const RiskDetailsView = () => {
         apiFetch(`/api/v1/risk-assessments?riskId=${id}`),
         apiFetch(`/api/v1/risk-treatments?riskId=${id}`),
         apiFetch(`/api/v1/assets`),
-        apiFetch(`/api/v1/controls`)
+        apiFetch(`/api/v1/controls?organizationId=${user?.organizationId}`)
       ]);
       setRisk(riskData);
       setAssessments(assessData);
