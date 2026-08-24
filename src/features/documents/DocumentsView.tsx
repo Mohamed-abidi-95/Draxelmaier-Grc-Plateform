@@ -12,6 +12,7 @@ export const DocumentsView = () => {
   const [uploading, setUploading] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const [newPolicy, setNewPolicy] = useState({ title: '', description: '' });
+  const [searchTerm, setSearchTerm] = useState('');
   const { user } = useAuth();
 
   const loadPolicies = async () => {
@@ -70,7 +71,11 @@ export const DocumentsView = () => {
 
   const handleUploadAndCreatePolicy = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!user || !file) return;
+    if (!user) return;
+    if (!file) {
+      alert('Veuillez sélectionner un fichier avant d\'envoyer.');
+      return;
+    }
 
     setUploading(true);
     try {
@@ -119,6 +124,11 @@ export const DocumentsView = () => {
     }
   };
 
+  const filteredPolicies = policies.filter(p => 
+    p.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
+    p.id.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <div className="flex-1 flex flex-col gap-6 max-w-[1440px] mx-auto w-full animate-fade-in">
       {/* Header Section */}
@@ -147,6 +157,8 @@ export const DocumentsView = () => {
             <span className="material-symbols-outlined absolute left-3 top-2.5 text-[20px] text-text-tertiary">search</span>
             <input 
               placeholder="Search documents..." 
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full pl-10 pr-4 py-2 font-body-sm text-text-primary bg-surface border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
             />
           </div>
@@ -179,7 +191,7 @@ export const DocumentsView = () => {
                       </div>
                   </td>
                 </tr>
-              ) : policies.length === 0 ? (
+              ) : filteredPolicies.length === 0 ? (
                 <tr>
                   <td colSpan={6} className="px-5 py-16 text-center">
                     <div className="flex flex-col items-center justify-center gap-2 text-text-tertiary">
@@ -188,7 +200,7 @@ export const DocumentsView = () => {
                     </div>
                   </td>
                 </tr>
-              ) : policies.map((policy, i) => (
+              ) : filteredPolicies.map((policy, i) => (
                 <tr key={i} className="hover:bg-surface-secondary/50 transition-colors group">
                   <td className="px-5 py-4">
                     <span className="font-mono text-xs text-text-tertiary bg-surface-container-low px-2 py-1 rounded" title={policy.id}>
@@ -294,7 +306,7 @@ export const DocumentsView = () => {
                       </p>
                       <p className="text-xs text-text-tertiary">PDF, DOCX up to 10MB</p>
                     </div>
-                    <input type="file" className="hidden" required onChange={(e: any) => setFile(e.target.files?.[0] || null)} />
+                    <input type="file" className="sr-only" onChange={(e: any) => setFile(e.target.files?.[0] || null)} />
                   </label>
                 </div>
               </div>
