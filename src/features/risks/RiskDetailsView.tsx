@@ -484,7 +484,7 @@ export const RiskDetailsView = () => {
                 >
                   <option value="">-- Select a control --</option>
                   {controlsList.map(c => (
-                    <option key={c.id} value={c.id}>{c.code} - {c.title}</option>
+                    <option key={c.id} value={c.id}>{c.name}</option>
                   ))}
                 </select>
                 <p className="font-body-sm text-text-tertiary mt-2">Linking a control allows you to monitor how this risk is mitigated.</p>
