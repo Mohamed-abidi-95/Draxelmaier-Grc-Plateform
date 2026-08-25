@@ -124,11 +124,18 @@ export const RiskDetailsView = () => {
 
   const latestAssessment = assessments.length > 0 ? assessments[0] : null;
 
-  const getStatusBadge = (status: number) => {
+  const getStatusBadge = (status: any) => {
     switch(status) {
-      case 0: return <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-error/10 text-error border border-error/20">OPEN</span>;
-      case 1: return <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-warning/10 text-warning border border-warning/20">MITIGATED</span>;
-      default: return <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-success/10 text-success border border-success/20">CLOSED</span>;
+      case 'Open':
+      case 0:
+      case '0':
+        return <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-error/10 text-error border border-error/20">OPEN</span>;
+      case 'Mitigated':
+      case 1:
+      case '1':
+        return <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-warning/10 text-warning border border-warning/20">MITIGATED</span>;
+      default:
+        return <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-success/10 text-success border border-success/20">CLOSED</span>;
     }
   };
 
