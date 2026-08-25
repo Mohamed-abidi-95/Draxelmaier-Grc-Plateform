@@ -107,11 +107,11 @@ export const RisksView = () => {
   const allCategories = Array.from(new Set(risks.map(r => r.category).filter(Boolean)));
   const allStatuses = Array.from(new Set(risks.map(r => r.status)));
 
-  const getStatusPill = (status: string, hasAssessment: boolean) => {
-    if (!hasAssessment) return <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold border border-error/20 text-error bg-error/5">Non évalué</span>;
-    if (status === 'Open' || status === '0') return <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold bg-surface-container-low text-text-secondary border border-border">Ouvert</span>;
-    if (status === 'Mitigated' || status === '1') return <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold bg-success/10 text-success border border-success/20">Traité</span>;
-    return <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold bg-warning/10 text-warning border border-warning/20">Accepté</span>;
+  const getStatusPill = (status: any, hasAssessment: boolean) => {
+    if (!hasAssessment) return <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold border border-error/20 text-error bg-error/5">UNASSESSED</span>;
+    if (status === 0 || status === '0' || status === 'Open') return <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold bg-error/10 text-error border border-error/20">OPEN</span>;
+    if (status === 1 || status === '1' || status === 'Mitigated') return <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold bg-warning/10 text-warning border border-warning/20">MITIGATED</span>;
+    return <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold bg-success/10 text-success border border-success/20">CLOSED</span>;
   };
 
   return (
