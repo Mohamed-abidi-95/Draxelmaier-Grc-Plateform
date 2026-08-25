@@ -9,7 +9,7 @@ namespace Draxlmaier.GRC.Application.Risks.Commands;
 public class LinkAssetToRiskCommand : IRequest<bool>
 {
     public Guid RiskId { get; set; }
-    public Guid AssetId { get; set; }
+    public Guid? AssetId { get; set; }
 }
 
 public class LinkAssetToRiskCommandHandler : IRequestHandler<LinkAssetToRiskCommand, bool>
@@ -26,10 +26,18 @@ public class LinkAssetToRiskCommandHandler : IRequestHandler<LinkAssetToRiskComm
         var risk = await _context.Risks.FindAsync(new object[] { request.RiskId }, cancellationToken);
         if (risk == null) return false;
 
-        var asset = await _context.Assets.FindAsync(new object[] { request.AssetId }, cancellationToken);
-        if (asset == null) return false;
+        if (request.AssetId.HasValue)
+        {
+            var asset = await _context.Assets.FindAsync(new object[] { request.AssetId.Value }, cancellationToken);
+            if (asset == null) return false;
+            risk.AssetId = asset.Id;
+        }
+        else
+        {
+            // Unlink asset
+            risk.AssetId = null;
+        }
 
-        risk.AssetId = asset.Id;
         await _context.SaveChangesAsync(cancellationToken);
 
         return true;
