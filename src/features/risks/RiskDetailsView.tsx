@@ -80,7 +80,7 @@ export const RiskDetailsView = () => {
     try {
       await apiFetch(`/api/v1/risks/${id}/asset`, {
         method: 'PUT',
-        body: JSON.stringify({ riskId: id, assetId })
+        body: JSON.stringify({ riskId: id, assetId: assetId === '' ? null : assetId })
       });
       setSelectedAssetId(assetId);
       loadData();
