@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router';
 import { useAuth } from '../../features/auth/AuthContext';
 
-export const Header = () => {
+export const Header = ({ onToggleSidebar }: { onToggleSidebar?: () => void }) => {
   const { user } = useAuth();
   const navigate = useNavigate();
 
@@ -10,6 +10,13 @@ export const Header = () => {
     <header className="flex justify-between items-center w-full px-6 h-16 z-40 bg-surface/80 backdrop-blur-md border-b border-border sticky top-0 shrink-0">
       <div className="flex items-center gap-8">
         <div className="flex items-center gap-2">
+          <button 
+            onClick={onToggleSidebar}
+            className="p-1.5 -ml-2 rounded-lg text-text-secondary hover:text-primary hover:bg-surface-secondary transition-colors"
+            title="Afficher/Masquer le menu"
+          >
+            <span className="material-symbols-outlined text-[24px]">menu</span>
+          </button>
           <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
             <span className="material-symbols-outlined text-primary text-[18px]">domain</span>
           </div>

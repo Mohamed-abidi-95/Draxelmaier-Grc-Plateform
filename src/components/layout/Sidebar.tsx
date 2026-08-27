@@ -54,7 +54,7 @@ const SIDEBAR_GROUPS = [
   }
 ];
 
-export const Sidebar = () => {
+export const Sidebar = ({ isOpen = true }: { isOpen?: boolean }) => {
   const { user, logout } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
@@ -79,7 +79,7 @@ export const Sidebar = () => {
   };
 
   return (
-    <nav className="hidden md:flex flex-col h-screen overflow-hidden fixed left-0 w-64 border-r border-border bg-surface-secondary z-50">
+    <nav className={`hidden md:flex flex-col h-screen overflow-hidden fixed left-0 w-64 border-r border-border bg-surface-secondary z-50 transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
       
       {/* Brand Header */}
       <div className="p-5 flex flex-col gap-1 border-b border-border/50 shrink-0">
