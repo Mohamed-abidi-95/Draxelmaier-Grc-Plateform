@@ -54,6 +54,17 @@ namespace Draxlmaier.GRC.Api.Controllers
             return NoContent();
         }
 
+        [HttpPatch("soa")]
+        [Authorize(Roles = "ComplianceOfficer,Administrator")]
+        public async Task<ActionResult> UpdateSoAMapping([FromBody] UpdateSoAMappingCommand command)
+        {
+            var result = await _mediator.Send(command);
+            if (!result)
+                return NotFound();
+
+            return NoContent();
+        }
+
         [HttpDelete("{id}")]
         [Authorize(Roles = "ComplianceOfficer,Administrator")]
         public async Task<ActionResult> DeleteMapping(Guid id)

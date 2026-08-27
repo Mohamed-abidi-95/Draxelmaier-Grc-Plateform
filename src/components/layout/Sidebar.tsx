@@ -35,7 +35,9 @@ const SIDEBAR_GROUPS = [
     icon: 'verified',
     items: [
       { id: 'compliance', path: '/compliance', label: 'Frameworks', allowedRoles: ['Administrator', 'ComplianceOfficer', 'CISO', 'Auditor'] },
-      { id: 'audits', path: '/audits', label: 'Audits', allowedRoles: ['Administrator', 'ComplianceOfficer', 'CISO', 'Auditor'] }
+      { id: 'audits', path: '/audits', label: 'Audits', allowedRoles: ['Administrator', 'ComplianceOfficer', 'CISO', 'Auditor'] },
+      { id: 'findings', path: '/findings', label: 'Findings & Actions', allowedRoles: ['Administrator', 'ComplianceOfficer', 'CISO', 'Auditor'] },
+      { id: 'soa', path: '/soa', label: 'SoA Report', allowedRoles: ['Administrator', 'ComplianceOfficer', 'CISO', 'Auditor'] }
     ]
   },
   {
@@ -94,7 +96,7 @@ export const Sidebar = ({ isOpen = true }: { isOpen?: boolean }) => {
 
       {/* Navigation Items (Scrollable) */}
       <div className="flex-1 overflow-y-auto py-4 px-3 space-y-5 custom-scrollbar">
-        {SIDEBAR_GROUPS.map((group, groupIdx) => {
+        {SIDEBAR_GROUPS.map((group) => {
           const filteredItems = group.items.filter(item => hasAccess(item.allowedRoles));
           if (filteredItems.length === 0) return null;
 

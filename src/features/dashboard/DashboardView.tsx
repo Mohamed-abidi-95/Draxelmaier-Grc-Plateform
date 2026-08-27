@@ -12,6 +12,19 @@ interface DashboardMetrics {
   nonCompliantRequirementsCount: number;
   complianceRate: number;
   risksBySeverity: Record<string, number>;
+  riskHeatmap: Record<string, number>;
+  riskRadarNodes: {
+    riskId: string;
+    code: string;
+    title: string;
+    probability: number;
+    impact: number;
+    trajectory: number;
+    score: number;
+  }[];
+  openFindingsCount: number;
+  overdueActionsCount: number;
+  expiringPoliciesCount: number;
   complianceByFramework: { frameworkId: string, frameworkName: string, complianceScorePercentage: number }[];
 }
 
@@ -68,17 +81,89 @@ export const DashboardView = () => {
     return 'bg-error';
   };
 
-  // Prepare data for the Pie Chart
-  const riskData = Object.entries(metrics.risksBySeverity).map(([key, value]) => ({
-    name: key.charAt(0).toUpperCase() + key.slice(1),
-    value
-  }));
+  const renderStackedBarChart = () => {
+    // Calculate distribution from radar nodes
+    let critical = 0, high = 0, medium = 0, low = 0;
+    const total = metrics.riskRadarNodes?.length || 0;
+    
+    metrics.riskRadarNodes?.forEach(node => {
+      if (node.score >= 15) critical++;
+      else if (node.score >= 10) high++;
+      else if (node.score >= 5) medium++;
+      else if (node.score > 0) low++;
+    });
 
-  const COLORS = {
-    High: 'var(--color-error)',
-    Medium: 'var(--color-warning)',
-    Low: 'var(--color-success)',
-    Critical: '#991B1B' // Darker red for critical
+    const getPercent = (count: number) => total > 0 ? (count / total) * 100 : 0;
+    
+    return (
+      <div className="flex flex-col w-full h-full p-6 relative bg-white">
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h3 className="text-[18px] font-bold text-slate-900 leading-tight">Exposition Globale</h3>
+            <p className="text-[13px] text-slate-500 mt-1">Répartition de vos {total} risques par niveau de criticité.</p>
+          </div>
+          <div className="bg-slate-50 border border-slate-100 rounded-lg px-4 py-2 flex flex-col items-center">
+            <span className="text-[24px] font-extrabold text-slate-900 leading-none">{total}</span>
+            <span className="text-[11px] font-medium text-slate-500 uppercase tracking-wider mt-1">Risques Actifs</span>
+          </div>
+        </div>
+
+        {/* Stacked Bar */}
+        <div className="w-full h-8 flex rounded-full overflow-hidden shadow-inner bg-slate-100 mt-2">
+          {critical > 0 && <div className="h-full bg-[#E63946] transition-all duration-1000" style={{ width: `${getPercent(critical)}%` }} title={`Critical: ${critical}`}></div>}
+          {high > 0 && <div className="h-full bg-[#F59E0B] transition-all duration-1000" style={{ width: `${getPercent(high)}%` }} title={`High: ${high}`}></div>}
+          {medium > 0 && <div className="h-full bg-[#FBBF24] transition-all duration-1000" style={{ width: `${getPercent(medium)}%` }} title={`Medium: ${medium}`}></div>}
+          {low > 0 && <div className="h-full bg-[#10B981] transition-all duration-1000" style={{ width: `${getPercent(low)}%` }} title={`Low: ${low}`}></div>}
+        </div>
+
+        {/* Legend and Stats */}
+        <div className="grid grid-cols-2 gap-4 mt-8">
+          <div className="flex flex-col p-3 rounded-xl border border-slate-100 hover:border-slate-200 hover:shadow-sm transition-all bg-slate-50/50">
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 rounded-full bg-[#E63946] shadow-sm"></div>
+                <span className="text-[13px] font-semibold text-slate-700">Critique</span>
+              </div>
+              <span className="text-[14px] font-bold text-[#E63946]">{critical}</span>
+            </div>
+            <span className="text-[11px] text-slate-500 font-medium">{getPercent(critical).toFixed(1)}% du total</span>
+          </div>
+
+          <div className="flex flex-col p-3 rounded-xl border border-slate-100 hover:border-slate-200 hover:shadow-sm transition-all bg-slate-50/50">
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 rounded-full bg-[#F59E0B] shadow-sm"></div>
+                <span className="text-[13px] font-semibold text-slate-700">Haut</span>
+              </div>
+              <span className="text-[14px] font-bold text-[#F59E0B]">{high}</span>
+            </div>
+            <span className="text-[11px] text-slate-500 font-medium">{getPercent(high).toFixed(1)}% du total</span>
+          </div>
+
+          <div className="flex flex-col p-3 rounded-xl border border-slate-100 hover:border-slate-200 hover:shadow-sm transition-all bg-slate-50/50">
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 rounded-full bg-[#FBBF24] shadow-sm"></div>
+                <span className="text-[13px] font-semibold text-slate-700">Moyen</span>
+              </div>
+              <span className="text-[14px] font-bold text-[#FBBF24]">{medium}</span>
+            </div>
+            <span className="text-[11px] text-slate-500 font-medium">{getPercent(medium).toFixed(1)}% du total</span>
+          </div>
+
+          <div className="flex flex-col p-3 rounded-xl border border-slate-100 hover:border-slate-200 hover:shadow-sm transition-all bg-slate-50/50">
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 rounded-full bg-[#10B981] shadow-sm"></div>
+                <span className="text-[13px] font-semibold text-slate-700">Faible</span>
+              </div>
+              <span className="text-[14px] font-bold text-[#10B981]">{low}</span>
+            </div>
+            <span className="text-[11px] text-slate-500 font-medium">{getPercent(low).toFixed(1)}% du total</span>
+          </div>
+        </div>
+      </div>
+    );
   };
 
   return (
@@ -148,21 +233,21 @@ export const DashboardView = () => {
           </div>
         </div>
 
-        {/* Audits Card */}
-        <div className="bg-surface border border-border p-5 rounded-xl shadow-sm hover:shadow-md hover:border-primary/40 transition-all duration-300 group flex flex-col justify-between">
+        {/* Audits & Findings Card */}
+        <div className="bg-surface border border-border p-5 rounded-xl shadow-sm hover:shadow-md hover:border-indigo-500/40 transition-all duration-300 group flex flex-col justify-between">
           <div className="flex justify-between items-start mb-4">
-            <span className="font-label-md text-text-secondary uppercase tracking-wider">Total Audits</span>
+            <span className="font-label-md text-text-secondary uppercase tracking-wider">Findings & Actions</span>
             <div className="p-2 bg-indigo-500/10 rounded-lg group-hover:scale-110 transition-transform">
-              <span className="material-symbols-outlined text-indigo-600 text-[20px]">assignment</span>
+              <span className="material-symbols-outlined text-indigo-600 text-[20px]">assignment_late</span>
             </div>
           </div>
           <div>
             <div className="flex items-end gap-2">
-              <span className="text-4xl font-bold text-text-primary tracking-tight">{metrics.totalAuditsCount}</span>
+              <span className="text-4xl font-bold text-text-primary tracking-tight">{metrics.openFindingsCount}</span>
             </div>
-            <p className="font-body-sm text-text-secondary mt-2 flex items-center gap-1">
-              <span className="material-symbols-outlined text-[14px]">check_circle</span>
-              Across all frameworks
+            <p className={`font-body-sm mt-2 flex items-center gap-1 font-medium ${metrics.overdueActionsCount > 0 ? 'text-error' : 'text-success'}`}>
+              <span className="material-symbols-outlined text-[14px]">{metrics.overdueActionsCount > 0 ? 'schedule' : 'check_circle'}</span>
+              {metrics.overdueActionsCount > 0 ? `${metrics.overdueActionsCount} actions overdue` : 'All actions on track'}
             </p>
           </div>
         </div>
@@ -172,43 +257,9 @@ export const DashboardView = () => {
       {/* Main Content Grid */}
       <section className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
-        {/* Risks Chart */}
+        {/* Predictive Risk Radar Chart */}
         <div className="lg:col-span-1 bg-surface border border-border rounded-xl shadow-sm flex flex-col overflow-hidden">
-          <div className="px-5 py-4 border-b border-border bg-surface-secondary/50 flex justify-between items-center">
-            <h2 className="font-headline-sm text-text-primary">Risks by Severity</h2>
-            <span className="material-symbols-outlined text-text-tertiary">pie_chart</span>
-          </div>
-          <div className="p-5 flex-1 flex flex-col items-center justify-center min-h-[300px]">
-            {riskData.length > 0 ? (
-              <ResponsiveContainer width="100%" height={250}>
-                <PieChart>
-                  <Pie
-                    data={riskData}
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={60}
-                    outerRadius={80}
-                    paddingAngle={5}
-                    dataKey="value"
-                  >
-                    {riskData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[entry.name as keyof typeof COLORS] || 'var(--color-primary)'} />
-                    ))}
-                  </Pie>
-                  <Tooltip 
-                    contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
-                    itemStyle={{ fontSize: '14px', fontWeight: 500 }}
-                  />
-                  <Legend verticalAlign="bottom" height={36} iconType="circle" />
-                </PieChart>
-              </ResponsiveContainer>
-            ) : (
-              <div className="text-center text-text-tertiary flex flex-col items-center gap-2">
-                <span className="material-symbols-outlined text-4xl opacity-50">done_all</span>
-                <p className="font-body-sm">No active risks found.</p>
-              </div>
-            )}
-          </div>
+          {renderStackedBarChart()}
         </div>
 
         {/* Framework Adherence Table */}

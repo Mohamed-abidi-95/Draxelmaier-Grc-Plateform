@@ -245,7 +245,7 @@ export const RisksView = () => {
                   </td>
                 </tr>
               ) : (
-                filteredRisks.map((risk, index) => {
+                filteredRisks.map((risk) => {
                   const assessment = getLatestScore(risk);
                   
                   // Calculate Severity Color

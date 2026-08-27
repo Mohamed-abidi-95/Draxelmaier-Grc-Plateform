@@ -2,11 +2,15 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { Button } from '../../components/ui/Button';
 import { apiFetch } from '../../lib/apiClient';
 import { useAuth } from '../auth/AuthContext';
+import { FindingsModal } from './FindingsModal';
+import { AuditChecklistModal } from './AuditChecklistModal';
 
 export const AuditsView = () => {
   const [audits, setAudits] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
+  const [selectedAuditForFindings, setSelectedAuditForFindings] = useState<any | null>(null);
+  const [selectedAuditForChecklist, setSelectedAuditForChecklist] = useState<any | null>(null);
   const [newAudit, setNewAudit] = useState({ title: '', description: '', targetFrameworkId: '' });
   const [frameworks, setFrameworks] = useState<any[]>([]);
   const [search, setSearch] = useState('');
@@ -171,7 +175,24 @@ export const AuditsView = () => {
                   </div>
                 </div>
 
-                <div className="w-full md:w-48 shrink-0 flex items-center md:justify-end gap-2 pt-4 md:pt-0 border-t md:border-t-0 border-border">
+                <div className="w-full md:w-56 shrink-0 flex items-center md:justify-end gap-2 pt-4 md:pt-0 border-t md:border-t-0 border-border flex-wrap">
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="flex-1 md:flex-none font-medium border-border hover:bg-surface-secondary text-text-secondary" 
+                    onClick={() => setSelectedAuditForChecklist(audit)}
+                  >
+                    <span className="material-symbols-outlined text-[18px] mr-1">fact_check</span> Checklist
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="flex-1 md:flex-none font-medium border-border hover:bg-surface-secondary text-text-secondary" 
+                    onClick={() => setSelectedAuditForFindings(audit)}
+                  >
+                    <span className="material-symbols-outlined text-[18px] mr-1">policy</span> Findings
+                  </Button>
+                  
                   {audit.status !== 'Completed' ? (
                     <>
                       <Button 
@@ -272,6 +293,23 @@ export const AuditsView = () => {
             </form>
           </div>
         </div>
+      )}
+      {/* Findings Modal */}
+      {selectedAuditForFindings && (
+        <FindingsModal 
+          auditId={selectedAuditForFindings.id} 
+          auditTitle={selectedAuditForFindings.title}
+          onClose={() => setSelectedAuditForFindings(null)} 
+        />
+      )}
+
+      {/* Checklist Modal */}
+      {selectedAuditForChecklist && (
+        <AuditChecklistModal
+          auditId={selectedAuditForChecklist.id}
+          auditTitle={selectedAuditForChecklist.title}
+          onClose={() => setSelectedAuditForChecklist(null)}
+        />
       )}
     </div>
   );

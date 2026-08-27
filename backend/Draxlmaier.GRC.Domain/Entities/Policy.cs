@@ -29,4 +29,5 @@ public class Policy
     public DateTime? UpdatedAt { get; set; }
 
     public System.Collections.Generic.ICollection<ControlMapping> ControlMappings { get; set; } = new System.Collections.Generic.List<ControlMapping>();
+    public System.Collections.Generic.ICollection<PolicyReview> PolicyReviews { get; set; } = new System.Collections.Generic.List<PolicyReview>();
 }

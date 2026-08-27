@@ -18,7 +18,14 @@ public class DashboardMetricsDto
 
     // Charts Data
     public System.Collections.Generic.Dictionary<string, int> RisksBySeverity { get; set; } = new();
+    public System.Collections.Generic.Dictionary<string, int> RiskHeatmap { get; set; } = new(); // format: "P:I" -> count
+    public System.Collections.Generic.List<RiskRadarNodeDto> RiskRadarNodes { get; set; } = new();
     public System.Collections.Generic.List<FrameworkComplianceDto> ComplianceByFramework { get; set; } = new();
+
+    // Findings & Actions Metrics
+    public int OpenFindingsCount { get; set; }
+    public int OverdueActionsCount { get; set; }
+    public int ExpiringPoliciesCount { get; set; }
 }
 
 public class FrameworkComplianceDto
@@ -26,4 +33,15 @@ public class FrameworkComplianceDto
     public System.Guid FrameworkId { get; set; }
     public string FrameworkName { get; set; } = string.Empty;
     public double ComplianceScorePercentage { get; set; }
+}
+
+public class RiskRadarNodeDto
+{
+    public System.Guid RiskId { get; set; }
+    public string Code { get; set; } = string.Empty;
+    public string Title { get; set; } = string.Empty;
+    public int Probability { get; set; }
+    public int Impact { get; set; }
+    public int Trajectory { get; set; } // 1: Worsening, 0: Stable, -1: Improving
+    public int Score { get; set; }
 }

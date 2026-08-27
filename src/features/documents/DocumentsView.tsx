@@ -4,6 +4,7 @@ import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import { apiFetch } from '../../lib/apiClient';
 import { useAuth } from '../auth/AuthContext';
+import { ReviewPolicyModal } from '../policies/ReviewPolicyModal';
 
 export const DocumentsView = () => {
   const [policies, setPolicies] = useState<any[]>([]);
@@ -13,6 +14,8 @@ export const DocumentsView = () => {
   const [file, setFile] = useState<File | null>(null);
   const [newPolicy, setNewPolicy] = useState({ title: '', description: '' });
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedPolicyForReview, setSelectedPolicyForReview] = useState<any | null>(null);
+  const [editingPolicy, setEditingPolicy] = useState<any | null>(null);
   const { user } = useAuth();
 
   const loadPolicies = async () => {
@@ -113,12 +116,76 @@ export const DocumentsView = () => {
     }
   };
 
-  const getStatusBadge = (status: number) => {
-    switch(status) {
-      case 0:
+  const handleSubmitForApproval = async (policyId: string) => {
+    try {
+      await apiFetch(`/api/v1/policies/${policyId}/submit`, { method: 'POST' });
+      loadPolicies();
+    } catch (err) {
+      console.error(err);
+      alert('Failed to submit policy for approval');
+    }
+  };
+
+  const handleDeletePolicy = async (policyId: string) => {
+    if (!window.confirm('Are you sure you want to delete this policy? This action cannot be undone.')) return;
+    try {
+      await apiFetch(`/api/v1/policies/${policyId}`, { method: 'DELETE' });
+      loadPolicies();
+    } catch (err) {
+      console.error(err);
+      alert('Failed to delete policy');
+    }
+  };
+
+  const handleEditSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingPolicy) return;
+    try {
+      await apiFetch(`/api/v1/policies/${editingPolicy.id}`, {
+        method: 'PUT',
+        body: JSON.stringify({
+          id: editingPolicy.id,
+          title: editingPolicy.title,
+          description: editingPolicy.description,
+          expiryDate: editingPolicy.expiryDate,
+          status: typeof editingPolicy.status === 'string' ? getStatusNumeric(editingPolicy.status) : editingPolicy.status
+        })
+      });
+      setEditingPolicy(null);
+      loadPolicies();
+    } catch (err) {
+      console.error(err);
+      alert('Failed to update policy');
+    }
+  };
+
+  const getStatusNumeric = (statusStr: string) => {
+    switch (statusStr) {
+      case 'Draft': return 0;
+      case 'PendingApproval': return 1;
+      case 'Active': return 2;
+      case 'Rejected': return 3;
+      case 'Expired': return 4;
+      case 'Archived': return 5;
+      default: return 0;
+    }
+  };
+
+  const getStatusBadge = (status: number | string) => {
+    // Handling both numeric (old) and string (new enum string conversion) statuses
+    const statusStr = typeof status === 'number' 
+      ? (status === 0 ? 'Draft' : status === 1 ? 'Active' : 'Archived') 
+      : status;
+
+    switch(statusStr) {
+      case 'Draft':
         return <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold bg-slate-100 text-slate-600 border border-slate-200">Draft</span>;
-      case 1:
+      case 'PendingApproval':
+        return <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold bg-warning/10 text-warning border border-warning/20">Pending Approval</span>;
+      case 'Active':
         return <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold bg-success/10 text-success border border-success/20">Active</span>;
+      case 'Rejected':
+        return <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold bg-error/10 text-error border border-error/20">Rejected</span>;
       default:
         return <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold bg-surface-container-low text-text-tertiary border border-border">Archived</span>;
     }
@@ -203,8 +270,8 @@ export const DocumentsView = () => {
               ) : filteredPolicies.map((policy, i) => (
                 <tr key={i} className="hover:bg-surface-secondary/50 transition-colors group">
                   <td className="px-5 py-4">
-                    <span className="font-mono text-xs text-text-tertiary bg-surface-container-low px-2 py-1 rounded" title={policy.id}>
-                      {policy.id.split('-')[0]}
+                    <span className="font-mono text-[10px] text-text-tertiary bg-surface-container-low px-1.5 py-1 rounded" title={policy.id}>
+                      {policy.id}
                     </span>
                   </td>
                   <td className="px-5 py-4">
@@ -219,15 +286,35 @@ export const DocumentsView = () => {
                     {getStatusBadge(policy.status)}
                   </td>
                   <td className="px-5 py-4">
-                    <span className="text-text-secondary" title={policy.ownerId}>
-                      {policy.ownerId.split('-')[0]}...
+                    <span className="font-mono text-[10px] text-text-secondary" title={policy.ownerId}>
+                      {policy.ownerId}
                     </span>
                   </td>
                   <td className="px-5 py-4 text-text-secondary">
                     {new Date(policy.createdAt).toLocaleDateString()}
                   </td>
                   <td className="px-5 py-4 text-right">
-                    <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div className="flex justify-end gap-2 transition-opacity">
+                      {(policy.status === 'Draft' || policy.status === 'Rejected' || policy.status === 0) && (
+                        <button 
+                          onClick={() => handleSubmitForApproval(policy.id)}
+                          className="px-2 py-1 text-[11px] font-medium text-primary hover:bg-primary/10 rounded-md transition-colors border border-primary/30"
+                          title="Submit for Approval"
+                        >
+                          Submit
+                        </button>
+                      )}
+                      
+                      {policy.status === 'PendingApproval' && user?.roles.some((r: string) => ['Administrator', 'ComplianceOfficer', 'CISO'].includes(r)) && (
+                        <button 
+                          onClick={() => setSelectedPolicyForReview(policy)}
+                          className="px-2 py-1 text-[11px] font-medium text-warning hover:bg-warning/10 rounded-md transition-colors border border-warning/30"
+                          title="Review Policy"
+                        >
+                          Review
+                        </button>
+                      )}
+
                       <button 
                         onClick={() => handleDownload(policy.documentId, policy.title, 'view')}
                         className="p-1.5 text-text-tertiary hover:text-primary hover:bg-primary/10 rounded-md transition-colors"
@@ -242,6 +329,25 @@ export const DocumentsView = () => {
                       >
                         <span className="material-symbols-outlined text-[20px]">download</span>
                       </button>
+
+                      {(user?.roles.includes('Administrator') || user?.roles.includes('ComplianceOfficer')) && (
+                        <>
+                          <button 
+                            onClick={() => setEditingPolicy({...policy})}
+                            className="p-1.5 text-text-tertiary hover:text-primary hover:bg-primary/10 rounded-md transition-colors"
+                            title="Edit Policy"
+                          >
+                            <span className="material-symbols-outlined text-[20px]">edit</span>
+                          </button>
+                          <button 
+                            onClick={() => handleDeletePolicy(policy.id)}
+                            className="p-1.5 text-text-tertiary hover:text-error hover:bg-error/10 rounded-md transition-colors"
+                            title="Delete Policy"
+                          >
+                            <span className="material-symbols-outlined text-[20px]">delete</span>
+                          </button>
+                        </>
+                      )}
                     </div>
                   </td>
                 </tr>
@@ -324,6 +430,74 @@ export const DocumentsView = () => {
                   ) : (
                     'Upload & Create'
                   )}
+                </Button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Review Modal */}
+      {selectedPolicyForReview && (
+        <ReviewPolicyModal 
+          policyId={selectedPolicyForReview.id}
+          policyTitle={selectedPolicyForReview.title}
+          onClose={() => setSelectedPolicyForReview(null)}
+          onSuccess={() => {
+            setSelectedPolicyForReview(null);
+            loadPolicies();
+          }}
+        />
+      )}
+
+      {/* Edit Policy Modal */}
+      {editingPolicy && (
+        <div className="fixed inset-0 bg-[#0F172A]/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
+          <div className="bg-surface rounded-2xl shadow-xl w-full max-w-lg overflow-hidden border border-border scale-in-center">
+            
+            <div className="px-6 py-5 border-b border-border bg-surface-secondary/50 flex justify-between items-center">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
+                  <span className="material-symbols-outlined text-primary text-[18px]">edit_document</span>
+                </div>
+                <h3 className="font-headline-sm text-text-primary">Edit Policy</h3>
+              </div>
+              <button 
+                onClick={() => setEditingPolicy(null)}
+                className="text-text-tertiary hover:text-text-primary transition-colors p-1 rounded-md hover:bg-surface-secondary"
+              >
+                <span className="material-symbols-outlined text-[20px]">close</span>
+              </button>
+            </div>
+            
+            <form onSubmit={handleEditSubmit} className="p-6 space-y-5">
+              <div className="space-y-1.5">
+                <label className="block font-label-md text-text-secondary uppercase tracking-wider">Policy Title</label>
+                <input 
+                  autoFocus
+                  required 
+                  className="w-full px-4 py-2.5 font-body-sm text-text-primary bg-surface-secondary border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all placeholder-text-tertiary"
+                  value={editingPolicy.title} 
+                  onChange={(e: any) => setEditingPolicy({...editingPolicy, title: e.target.value})} 
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="block font-label-md text-text-secondary uppercase tracking-wider">Description</label>
+                <input 
+                  required 
+                  className="w-full px-4 py-2.5 font-body-sm text-text-primary bg-surface-secondary border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all placeholder-text-tertiary"
+                  value={editingPolicy.description} 
+                  onChange={(e: any) => setEditingPolicy({...editingPolicy, description: e.target.value})} 
+                />
+              </div>
+
+              <div className="flex justify-end gap-3 pt-6 border-t border-border mt-2">
+                <Button type="button" variant="outline" className="px-5 font-medium border-border text-text-secondary hover:bg-surface-secondary hover:text-text-primary" onClick={() => setEditingPolicy(null)}>
+                  Cancel
+                </Button>
+                <Button type="submit" className="px-5 bg-primary hover:bg-primary/90 text-white font-medium flex items-center gap-2">
+                  Save Changes
                 </Button>
               </div>
             </form>

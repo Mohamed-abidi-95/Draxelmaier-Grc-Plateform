@@ -7,14 +7,16 @@ import { RiskDetailsView } from './features/risks/RiskDetailsView';
 import { RiskAssessmentsView } from './features/risks/RiskAssessmentsView';
 import { RiskTreatmentsView } from './features/risks/RiskTreatmentsView';
 import { ComplianceView } from './features/compliance/ComplianceView';
+import { SoAView } from './features/compliance/SoAView';
 import { DocumentsView } from './features/documents/DocumentsView';
 import { AuditsView } from './features/audits/AuditsView';
+import { FindingsView } from './features/audits/FindingsView';
 import { ActivityLogsView } from './features/audits/ActivityLogsView';
 import { ControlsView } from './features/controls/ControlsView';
 import { AssetsView } from './features/assets/AssetsView';
 import { BusinessUnitsView } from './features/organization/BusinessUnitsView';
 import { UsersView } from './features/admin/UsersView';
-import { AIAssistantView } from './features/ai/AIAssistantView';
+import { AiAssistantView } from './features/ai/AiAssistantView';
 
 import { LoginView } from './features/auth/LoginView';
 import { AuthProvider, useAuth } from './features/auth/AuthContext';
@@ -62,13 +64,15 @@ export default function App() {
           <Route path="risk-assessments" element={<RiskAssessmentsView />} />
           <Route path="risk-treatments" element={<RiskTreatmentsView />} />
           <Route path="compliance" element={<ComplianceView />} />
+          <Route path="soa" element={<SoAView />} />
           <Route path="controls" element={<ControlsView />} />
           <Route path="assets" element={<AssetsView />} />
           <Route path="documents" element={<DocumentsView />} />
           <Route path="audits" element={<AuditsView />} />
+          <Route path="findings" element={<FindingsView />} />
           <Route path="activity-logs" element={<ActivityLogsView />} />
           <Route path="users" element={<UsersView />} />
-          <Route path="intelligence" element={<AIAssistantView />} />
+          <Route path="intelligence" element={<AiAssistantView />} />
           <Route path="incidents" element={<PlaceholderView title="Incidents" />} />
           <Route path="reports" element={<PlaceholderView title="Reports" />} />
 

@@ -72,6 +72,31 @@ public class PoliciesController : ControllerBase
         return NoContent();
     }
 
+    [HttpPost("{id}/submit")]
+    [Authorize(Roles = "Administrator,ComplianceOfficer,PolicyOwner")]
+    public async Task<ActionResult> SubmitPolicyForApproval(Guid id)
+    {
+        await _mediator.Send(new SubmitPolicyForApprovalCommand(id));
+        return NoContent();
+    }
+
+    [HttpPost("{id}/review")]
+    [Authorize(Roles = "Administrator,ComplianceOfficer,CISO")]
+    public async Task<ActionResult> ReviewPolicy(Guid id, [FromBody] ReviewPolicyCommand command)
+    {
+        if (id != command.PolicyId) return BadRequest();
+        await _mediator.Send(command);
+        return NoContent();
+    }
+
+    [HttpGet("{id}/reviews")]
+    [Authorize(Roles = "Administrator,ComplianceOfficer,PolicyOwner,CISO,Auditor")]
+    public async Task<ActionResult<List<PolicyReviewDto>>> GetPolicyReviews(Guid id)
+    {
+        var reviews = await _mediator.Send(new GetPolicyReviewsQuery(id));
+        return Ok(reviews);
+    }
+
     [HttpPost("trigger-reminders")]
     public async Task<ActionResult<int>> TriggerReminders([FromQuery] int daysBeforeExpiration = 30)
     {

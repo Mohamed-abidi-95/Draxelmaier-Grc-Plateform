@@ -113,6 +113,39 @@ namespace Draxlmaier.GRC.Infrastructure.Migrations
                     b.ToTable("Audits");
                 });
 
+            modelBuilder.Entity("Draxlmaier.GRC.Domain.Entities.AuditItem", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("AuditId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Comments")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid?>("EvidenceId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Requirement")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AuditId");
+
+                    b.HasIndex("EvidenceId");
+
+                    b.ToTable("AuditItems");
+                });
+
             modelBuilder.Entity("Draxlmaier.GRC.Domain.Entities.AuditLog", b =>
                 {
                     b.Property<Guid>("Id")
@@ -275,6 +308,13 @@ namespace Draxlmaier.GRC.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<bool>("IsApplicable")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Justification")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("Origin")
                         .IsRequired()
                         .HasColumnType("text");
@@ -298,6 +338,44 @@ namespace Draxlmaier.GRC.Infrastructure.Migrations
                     b.HasIndex("RequirementId");
 
                     b.ToTable("ControlMappings");
+                });
+
+            modelBuilder.Entity("Draxlmaier.GRC.Domain.Entities.CorrectiveAction", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("CompletedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("DueDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("FindingId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("OwnerId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FindingId");
+
+                    b.HasIndex("OwnerId");
+
+                    b.ToTable("CorrectiveActions");
                 });
 
             modelBuilder.Entity("Draxlmaier.GRC.Domain.Entities.Document", b =>
@@ -373,6 +451,53 @@ namespace Draxlmaier.GRC.Infrastructure.Migrations
                     b.ToTable("Evidences");
                 });
 
+            modelBuilder.Entity("Draxlmaier.GRC.Domain.Entities.Finding", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("AssigneeId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("AuditId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("DueDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("ResolvedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Severity")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AssigneeId");
+
+                    b.HasIndex("AuditId");
+
+                    b.ToTable("Findings");
+                });
+
             modelBuilder.Entity("Draxlmaier.GRC.Domain.Entities.Organization", b =>
                 {
                     b.Property<Guid>("Id")
@@ -424,8 +549,9 @@ namespace Draxlmaier.GRC.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("integer");
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -441,6 +567,36 @@ namespace Draxlmaier.GRC.Infrastructure.Migrations
                     b.HasIndex("DocumentId");
 
                     b.ToTable("Policies");
+                });
+
+            modelBuilder.Entity("Draxlmaier.GRC.Domain.Entities.PolicyReview", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Comments")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsApproved")
+                        .HasColumnType("boolean");
+
+                    b.Property<Guid>("PolicyId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("ReviewedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("ReviewerId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PolicyId");
+
+                    b.ToTable("PolicyReviews");
                 });
 
             modelBuilder.Entity("Draxlmaier.GRC.Domain.Entities.Risk", b =>
@@ -824,6 +980,23 @@ namespace Draxlmaier.GRC.Infrastructure.Migrations
                     b.Navigation("TargetFramework");
                 });
 
+            modelBuilder.Entity("Draxlmaier.GRC.Domain.Entities.AuditItem", b =>
+                {
+                    b.HasOne("Draxlmaier.GRC.Domain.Entities.Audit", "Audit")
+                        .WithMany("Checklist")
+                        .HasForeignKey("AuditId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Draxlmaier.GRC.Domain.Entities.Document", "Evidence")
+                        .WithMany()
+                        .HasForeignKey("EvidenceId");
+
+                    b.Navigation("Audit");
+
+                    b.Navigation("Evidence");
+                });
+
             modelBuilder.Entity("Draxlmaier.GRC.Domain.Entities.BusinessUnit", b =>
                 {
                     b.HasOne("Draxlmaier.GRC.Domain.Entities.Organization", "Organization")
@@ -902,6 +1075,21 @@ namespace Draxlmaier.GRC.Infrastructure.Migrations
                     b.Navigation("Requirement");
                 });
 
+            modelBuilder.Entity("Draxlmaier.GRC.Domain.Entities.CorrectiveAction", b =>
+                {
+                    b.HasOne("Draxlmaier.GRC.Domain.Entities.Finding", "Finding")
+                        .WithMany("CorrectiveActions")
+                        .HasForeignKey("FindingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Draxlmaier.GRC.Infrastructure.Identity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("OwnerId");
+
+                    b.Navigation("Finding");
+                });
+
             modelBuilder.Entity("Draxlmaier.GRC.Domain.Entities.Evidence", b =>
                 {
                     b.HasOne("Draxlmaier.GRC.Domain.Entities.ControlMapping", "ControlMapping")
@@ -921,6 +1109,21 @@ namespace Draxlmaier.GRC.Infrastructure.Migrations
                     b.Navigation("Document");
                 });
 
+            modelBuilder.Entity("Draxlmaier.GRC.Domain.Entities.Finding", b =>
+                {
+                    b.HasOne("Draxlmaier.GRC.Infrastructure.Identity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("AssigneeId");
+
+                    b.HasOne("Draxlmaier.GRC.Domain.Entities.Audit", "Audit")
+                        .WithMany("Findings")
+                        .HasForeignKey("AuditId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Audit");
+                });
+
             modelBuilder.Entity("Draxlmaier.GRC.Domain.Entities.Policy", b =>
                 {
                     b.HasOne("Draxlmaier.GRC.Domain.Entities.BusinessUnit", "BusinessUnit")
@@ -936,6 +1139,17 @@ namespace Draxlmaier.GRC.Infrastructure.Migrations
                     b.Navigation("BusinessUnit");
 
                     b.Navigation("Document");
+                });
+
+            modelBuilder.Entity("Draxlmaier.GRC.Domain.Entities.PolicyReview", b =>
+                {
+                    b.HasOne("Draxlmaier.GRC.Domain.Entities.Policy", "Policy")
+                        .WithMany("PolicyReviews")
+                        .HasForeignKey("PolicyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Policy");
                 });
 
             modelBuilder.Entity("Draxlmaier.GRC.Domain.Entities.Risk", b =>
@@ -1079,6 +1293,13 @@ namespace Draxlmaier.GRC.Infrastructure.Migrations
                     b.Navigation("Risks");
                 });
 
+            modelBuilder.Entity("Draxlmaier.GRC.Domain.Entities.Audit", b =>
+                {
+                    b.Navigation("Checklist");
+
+                    b.Navigation("Findings");
+                });
+
             modelBuilder.Entity("Draxlmaier.GRC.Domain.Entities.BusinessUnit", b =>
                 {
                     b.Navigation("Children");
@@ -1112,6 +1333,11 @@ namespace Draxlmaier.GRC.Infrastructure.Migrations
                     b.Navigation("Evidences");
                 });
 
+            modelBuilder.Entity("Draxlmaier.GRC.Domain.Entities.Finding", b =>
+                {
+                    b.Navigation("CorrectiveActions");
+                });
+
             modelBuilder.Entity("Draxlmaier.GRC.Domain.Entities.Organization", b =>
                 {
                     b.Navigation("BusinessUnits");
@@ -1120,6 +1346,8 @@ namespace Draxlmaier.GRC.Infrastructure.Migrations
             modelBuilder.Entity("Draxlmaier.GRC.Domain.Entities.Policy", b =>
                 {
                     b.Navigation("ControlMappings");
+
+                    b.Navigation("PolicyReviews");
                 });
 
             modelBuilder.Entity("Draxlmaier.GRC.Domain.Entities.Risk", b =>

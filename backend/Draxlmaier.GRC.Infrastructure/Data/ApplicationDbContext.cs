@@ -31,16 +31,20 @@ namespace Draxlmaier.GRC.Infrastructure.Data
         public DbSet<RiskAssessment> RiskAssessments => Set<RiskAssessment>();
         public DbSet<Document> Documents => Set<Document>();
         public DbSet<Policy> Policies => Set<Policy>();
+        public DbSet<PolicyReview> PolicyReviews => Set<PolicyReview>();
         public DbSet<ComplianceFramework> ComplianceFrameworks => Set<ComplianceFramework>();
         public DbSet<ComplianceRequirement> ComplianceRequirements => Set<ComplianceRequirement>();
         public DbSet<Control> Controls => Set<Control>();
         public DbSet<ControlMapping> ControlMappings => Set<ControlMapping>();
         public DbSet<Evidence> Evidences => Set<Evidence>();
         public DbSet<Audit> Audits => Set<Audit>();
+        public DbSet<Finding> Findings => Set<Finding>();
+        public DbSet<CorrectiveAction> CorrectiveActions => Set<CorrectiveAction>();
         public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
         public DbSet<RiskTreatment> RiskTreatments => Set<RiskTreatment>();
         public DbSet<RiskControl> RiskControls => Set<RiskControl>();
         public DbSet<BusinessUnit> BusinessUnits => Set<BusinessUnit>();
+        public DbSet<AuditItem> AuditItems => Set<AuditItem>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -56,6 +60,36 @@ namespace Draxlmaier.GRC.Infrastructure.Data
                 entity.HasOne(e => e.Organization).WithMany().HasForeignKey(e => e.OrganizationId);
                 entity.HasOne<ApplicationUser>().WithMany().HasForeignKey(e => e.AuditorId);
                 entity.HasOne(e => e.TargetFramework).WithMany().HasForeignKey(e => e.TargetFrameworkId).IsRequired(false);
+            });
+
+            // AuditItem configuration
+            modelBuilder.Entity<AuditItem>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Status).HasConversion<string>();
+                entity.HasOne(e => e.Audit).WithMany(a => a.Checklist).HasForeignKey(e => e.AuditId).OnDelete(DeleteBehavior.Cascade);
+                entity.HasOne(e => e.Evidence).WithMany().HasForeignKey(e => e.EvidenceId).IsRequired(false);
+            });
+
+            // Finding configuration
+            modelBuilder.Entity<Finding>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Title).IsRequired().HasMaxLength(256);
+                entity.Property(e => e.Severity).HasConversion<string>();
+                entity.Property(e => e.Status).HasConversion<string>();
+                entity.HasOne(e => e.Audit).WithMany(a => a.Findings).HasForeignKey(e => e.AuditId);
+                entity.HasOne<ApplicationUser>().WithMany().HasForeignKey(e => e.AssigneeId).IsRequired(false);
+            });
+
+            // CorrectiveAction configuration
+            modelBuilder.Entity<CorrectiveAction>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Description).IsRequired();
+                entity.Property(e => e.Status).HasConversion<string>();
+                entity.HasOne(e => e.Finding).WithMany(f => f.CorrectiveActions).HasForeignKey(e => e.FindingId);
+                entity.HasOne<ApplicationUser>().WithMany().HasForeignKey(e => e.OwnerId).IsRequired(false);
             });
 
             // Organization configuration
@@ -181,6 +215,14 @@ namespace Draxlmaier.GRC.Infrastructure.Data
             modelBuilder.Entity<Policy>(entity =>
             {
                 entity.HasOne(e => e.BusinessUnit).WithMany(bu => bu.Policies).HasForeignKey(e => e.BusinessUnitId).IsRequired(false);
+                entity.Property(e => e.Status).HasConversion<string>(); // Added enum string conversion since we added new ones
+            });
+            
+            // PolicyReview configuration
+            modelBuilder.Entity<PolicyReview>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.HasOne(e => e.Policy).WithMany(p => p.PolicyReviews).HasForeignKey(e => e.PolicyId);
             });
         }
 

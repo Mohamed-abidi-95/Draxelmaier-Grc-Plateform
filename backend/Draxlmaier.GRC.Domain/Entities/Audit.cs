@@ -21,4 +21,6 @@ public class Audit
     // Navigation properties
     public Organization? Organization { get; set; }
     public ComplianceFramework? TargetFramework { get; set; }
+    public ICollection<Finding> Findings { get; set; } = new List<Finding>();
+    public ICollection<AuditItem> Checklist { get; set; } = new List<AuditItem>();
 }

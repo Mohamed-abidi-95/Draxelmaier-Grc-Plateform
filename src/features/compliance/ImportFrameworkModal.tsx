@@ -30,7 +30,7 @@ export const ImportFrameworkModal = ({ onClose, onSuccess }: ImportFrameworkModa
       formData.append('version', version);
       formData.append('file', file);
 
-      await apiFetch('/api/v1/frameworks/import', {
+      await apiFetch('/api/v1/frameworks/upload', {
         method: 'POST',
         body: formData,
         // Let the browser set the Content-Type header with the boundary for FormData

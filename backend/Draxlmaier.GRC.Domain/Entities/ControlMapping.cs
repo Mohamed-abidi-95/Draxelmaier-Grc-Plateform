@@ -14,6 +14,8 @@ namespace Draxlmaier.GRC.Domain.Entities
 
         public ComplianceStatus Status { get; set; } = ComplianceStatus.NotAssessed;
         public MappingOrigin Origin { get; set; } = MappingOrigin.Manual;
+        public bool IsApplicable { get; set; } = true;
+        public string Justification { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         // Navigation properties

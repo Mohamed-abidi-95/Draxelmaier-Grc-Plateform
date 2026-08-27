@@ -73,5 +73,12 @@ namespace Draxlmaier.GRC.Api.Controllers
             if (status == null) return NotFound();
             return Ok(status);
         }
+
+        [HttpGet("{id}/soa")]
+        public async Task<ActionResult<List<SoAReportItemDto>>> GetSoAReport(Guid id)
+        {
+            var report = await _mediator.Send(new GetSoAReportQuery(id));
+            return Ok(report);
+        }
     }
 }

@@ -40,6 +40,16 @@ public class GetDashboardMetricsQueryHandler : IRequestHandler<GetDashboardMetri
         metrics.TotalAuditsCount = await _context.Audits
             .CountAsync(cancellationToken);
 
+        metrics.OpenFindingsCount = await _context.Findings
+            .CountAsync(f => f.Status == Domain.Enums.FindingStatus.Open || f.Status == Domain.Enums.FindingStatus.InProgress, cancellationToken);
+
+        metrics.OverdueActionsCount = await _context.CorrectiveActions
+            .CountAsync(a => a.Status != Domain.Enums.CorrectiveActionStatus.Completed && a.DueDate.HasValue && a.DueDate.Value < System.DateTime.UtcNow, cancellationToken);
+
+        var thirtyDaysFromNow = System.DateTime.UtcNow.AddDays(30);
+        metrics.ExpiringPoliciesCount = await _context.Policies
+            .CountAsync(p => p.Status == Domain.Enums.PolicyStatus.Active && p.ExpiryDate.HasValue && p.ExpiryDate.Value <= thirtyDaysFromNow, cancellationToken);
+
         // A requirement is compliant if it has at least one mapping with "Compliant" status
         var allReqs = await _context.ComplianceRequirements
             .Include(r => r.ControlMappings)
@@ -62,10 +72,41 @@ public class GetDashboardMetricsQueryHandler : IRequestHandler<GetDashboardMetri
         int low = 0, medium = 0, high = 0;
         foreach (var risk in allRisks)
         {
-            var latestScore = risk.Assessments.OrderByDescending(a => a.AssessedAt).FirstOrDefault()?.Score ?? 0;
+            var assessments = risk.Assessments.OrderByDescending(a => a.AssessedAt).ToList();
+            var latestAssessment = assessments.FirstOrDefault();
+            var previousAssessment = assessments.Skip(1).FirstOrDefault();
+
+            var latestScore = latestAssessment?.Score ?? 0;
             if (latestScore >= 15) high++;
             else if (latestScore >= 8) medium++;
             else if (latestScore > 0) low++;
+
+            if (latestAssessment != null)
+            {
+                var key = $"{latestAssessment.Probability}:{latestAssessment.Impact}";
+                if (!metrics.RiskHeatmap.ContainsKey(key))
+                    metrics.RiskHeatmap[key] = 0;
+                metrics.RiskHeatmap[key]++;
+
+                // Calculate Trajectory (1: Worsening, 0: Stable, -1: Improving)
+                int trajectory = 0;
+                if (previousAssessment != null)
+                {
+                    if (latestAssessment.Score > previousAssessment.Score) trajectory = 1;
+                    else if (latestAssessment.Score < previousAssessment.Score) trajectory = -1;
+                }
+
+                metrics.RiskRadarNodes.Add(new RiskRadarNodeDto
+                {
+                    RiskId = risk.Id,
+                    Code = string.IsNullOrEmpty(risk.Code) ? $"R-{risk.Id.ToString().Substring(0, 4).ToUpper()}" : risk.Code,
+                    Title = risk.Title,
+                    Probability = latestAssessment.Probability,
+                    Impact = latestAssessment.Impact,
+                    Score = latestScore,
+                    Trajectory = trajectory
+                });
+            }
         }
         
         metrics.RisksBySeverity.Add("High", high);
